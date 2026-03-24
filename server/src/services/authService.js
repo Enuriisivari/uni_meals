@@ -1,7 +1,13 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 
+const normalizeEmail = (email) => String(email || "").trim().toLowerCase();
+
 export const registerUser = async (name, email, password) => {
+  name = String(name || "").trim();
+  email = normalizeEmail(email);
+  password = String(password || "");
+
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -20,6 +26,7 @@ export const registerUser = async (name, email, password) => {
 };
 
 export const loginUser = async (email, password) => {
+  email = normalizeEmail(email);
   const user = await User.findOne({ email });
 
   if (!user) {
