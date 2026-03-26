@@ -9,7 +9,7 @@ uni_meals/
 ├── client/          # React frontend application
 ├── server/          # Node.js/Express backend application
 ├── .gitignore       
-└── README.md        # This file
+└── README.md        
 ```
 
 ## 🚀 Getting Started
