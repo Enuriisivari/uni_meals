@@ -43,20 +43,42 @@ export default function SignUp() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  function validateEmailWithAt(value) {
+    return String(value || '').includes('@')
+  }
+
+  function validatePasswordComplexity(value) {
+    const v = String(value || '')
+    // At least 6 chars, 1 uppercase, 1 lowercase, 1 number, 1 special (non-alphanumeric)
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/.test(v)
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+
+    const cleanEmail = String(email || '').trim()
+
+    if (!validateEmailWithAt(cleanEmail)) {
+      setError('Please enter a valid email address with "@"')
+      return
+    }
+
     if (password !== confirm) {
       setError('Passwords do not match.')
       return
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+
+    if (!validatePasswordComplexity(password)) {
+      setError(
+        'Password must be at least 6 characters and include uppercase, lowercase, numbers, and special characters.'
+      )
       return
     }
+
     setLoading(true)
     try {
-      await registerRequest({ name, email, password })
+      await registerRequest({ name, email: cleanEmail, password })
       navigate('/login')
     } catch (err) {
       const data = err.response?.data

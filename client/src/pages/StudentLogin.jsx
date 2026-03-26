@@ -91,9 +91,25 @@ export default function StudentLogin() {
     setError('')
     setLoading(true)
     try {
-      const data = await loginRequest({ email, password })
+      const cleanEmail = String(email || '').trim()
+      if (!cleanEmail.includes('@')) {
+        setError('Please enter a valid email address with "@"')
+        return
+      }
+
+      const data = await loginRequest({ email: cleanEmail, password })
+      // Backend may return either `{ user: {...} }` or `{ userId }` depending on version.
       if (data.user) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user))
+      } else if (data.userId) {
+        localStorage.setItem(
+          USER_KEY,
+          JSON.stringify({
+            id: data.userId,
+            name: data.name || 'Student',
+            email: data.email || email,
+          }),
+        )
       }
       navigate('/')
     } catch (err) {
@@ -147,9 +163,9 @@ export default function StudentLogin() {
               <label className="login-label" htmlFor="password">
                 Password
               </label>
-              <a href="#" className="login-forgot" onClick={(e) => e.preventDefault()}>
+              <Link to="/forgot-password" className="login-forgot">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
             <div className="login-input-wrap">
               <IconLock />
