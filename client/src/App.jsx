@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// Layout
+import AdminLayout from './components/AdminLayout';
+
+// Pages
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import DeliveryManagement from './pages/DeliveryManagement';
+import StaffManagement from './pages/StaffManagement';
+import TokenAssignment from './pages/TokenAssignment';
+import StaffIDAssignment from './pages/StaffIDAssignment';
+import OrderManagement from './pages/OrderManagement';
+import DeliveryTracking from './pages/DeliveryTracking';
+import DiscountManagement from './pages/DiscountManagement';
+import BudgetManagement from './pages/BudgetManagement';
+import NotificationManagement from './pages/NotificationManagement';
+import Reports from './pages/Reports';
+import Analytics from './pages/Analytics';
+import FeedbackManagement from './pages/FeedbackManagement';
+
+// Styles
+import './styles/admin.css';
+import './index.css';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+
+        {/* Admin Login */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Admin Panel Layout */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="delivery" element={<DeliveryManagement />} />
+          <Route path="staff" element={<StaffManagement />} />
+          <Route path="tokens" element={<TokenAssignment />} />
+          <Route path="staff-id" element={<StaffIDAssignment />} />
+          <Route path="orders" element={<OrderManagement />} />
+          <Route path="tracking" element={<DeliveryTracking />} />
+          <Route path="discounts" element={<DiscountManagement />} />
+          <Route path="budgets" element={<BudgetManagement />} />
+          <Route path="notifications" element={<NotificationManagement />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="feedback" element={<FeedbackManagement />} />
+        </Route>
+
+        {/* Default Redirect */}
+        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
