@@ -34,6 +34,20 @@ function IconLock() {
   )
 }
 
+function IconEye({ visible }) {
+  return visible ? (
+    <svg className="login-input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 5C7 5 2.7 8.1 1 12.5c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5m0 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" fill="currentColor" />
+      <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+    </svg>
+  ) : (
+    <svg className="login-input-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 7c2.2 0 4 1.8 4 4 0 .6-.1 1.2-.3 1.7m-2.5-2.5c0-1.4-1.1-2.5-2.5-2.5-.6 0-1.2.2-1.7.5M2 12s3 5.5 10 5.5 10-5.5 10-5.5-3-5.5-10-5.5S2 12 2 12z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3 3l18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export default function SignUp() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
@@ -42,6 +56,8 @@ export default function SignUp() {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   function validateEmailWithAt(value) {
     return String(value || '').includes('@')
@@ -151,11 +167,18 @@ export default function SignUp() {
               Password
             </label>
             <div className="login-input-wrap">
-              <IconLock />
+              <button
+                type="button"
+                className="login-input-icon-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                <IconEye visible={showPassword} />
+              </button>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="new-password"
                 className="login-input"
                 placeholder="At least 6 characters"
@@ -172,11 +195,18 @@ export default function SignUp() {
               Confirm password
             </label>
             <div className="login-input-wrap">
-              <IconLock />
+              <button
+                type="button"
+                className="login-input-icon-btn"
+                onClick={() => setShowConfirm(!showConfirm)}
+                aria-label={showConfirm ? 'Hide password' : 'Show password'}
+              >
+                <IconEye visible={showConfirm} />
+              </button>
               <input
                 id="confirm"
                 name="confirm"
-                type="password"
+                type={showConfirm ? 'text' : 'password'}
                 autoComplete="new-password"
                 className="login-input"
                 placeholder="Repeat password"

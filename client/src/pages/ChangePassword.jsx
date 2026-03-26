@@ -15,6 +15,23 @@ function IconLock() {
   )
 }
 
+function IconEye({ isVisible }) {
+  if (isVisible) {
+    return (
+      <svg className="change-pass-eyeIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+        <path d="M12 5c-4 0-7.5 2.5-9 6 1.5 3.5 5 6 9 6s7.5-2.5 9-6c-1.5-3.5-5-6-9-6z" stroke="currentColor" strokeWidth="2" />
+      </svg>
+    )
+  }
+  return (
+    <svg className="change-pass-eyeIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 3l18 18M5 12c0 3.5 3 6 7 6s7-2.5 7-6-3-6-7-6-7 2.5-7 6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  )
+}
+
 export default function ChangePassword() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -24,6 +41,9 @@ export default function ChangePassword() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     try {
@@ -101,7 +121,7 @@ export default function ChangePassword() {
               className="change-pass-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+              disabled
             />
           </div>
 
@@ -113,12 +133,20 @@ export default function ChangePassword() {
               <IconLock />
               <input
                 id="cp-current"
-                type="password"
+                type={showCurrentPassword ? 'text' : 'password'}
                 className="change-pass-input change-pass-input--icon"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                className="change-pass-toggleBtn"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                aria-label={showCurrentPassword ? 'Hide password' : 'Show password'}
+              >
+                <IconEye isVisible={showCurrentPassword} />
+              </button>
             </div>
           </div>
 
@@ -130,12 +158,20 @@ export default function ChangePassword() {
               <IconLock />
               <input
                 id="cp-new"
-                type="password"
+                type={showNewPassword ? 'text' : 'password'}
                 className="change-pass-input change-pass-input--icon"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                className="change-pass-toggleBtn"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+              >
+                <IconEye isVisible={showNewPassword} />
+              </button>
             </div>
           </div>
 
@@ -147,12 +183,20 @@ export default function ChangePassword() {
               <IconLock />
               <input
                 id="cp-confirm"
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 className="change-pass-input change-pass-input--icon"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                className="change-pass-toggleBtn"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              >
+                <IconEye isVisible={showConfirmPassword} />
+              </button>
             </div>
           </div>
 
