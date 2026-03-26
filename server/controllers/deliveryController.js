@@ -1,29 +1,29 @@
-import DeliveryPerson from "../models/DeliveryPerson.js";
+import DeliveryStaff from "../models/DeliveryStaff.js";
 
-export const getDeliveryPersons = async (req, res) => {
+export const getDeliveryStaffs = async (req, res) => {
   try {
-    const deliveryPersons = await DeliveryPerson.find().select("-password");
-    res.json({ success: true, data: deliveryPersons });
+    const deliveryStaffs = await DeliveryStaff.find().select("-password");
+    res.json({ success: true, data: deliveryStaffs });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-export const createDeliveryPerson = async (req, res) => {
+export const createDeliveryStaff = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const newDelivery = await DeliveryPerson.create({ name, email, password });
-    res.json({ success: true, data: newDelivery });
+    const newDeliveryStaff = await DeliveryStaff.create({ name, email, password });
+    res.json({ success: true, data: newDeliveryStaff });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-export const updateDeliveryPerson = async (req, res) => {
+export const updateDeliveryStaff = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const delivery = await DeliveryPerson.findById(id);
+    const delivery = await DeliveryStaff.findById(id);
     if (!delivery) return res.status(404).json({ message: "Not found" });
     
     if (status) delivery.status = status;
@@ -35,10 +35,10 @@ export const updateDeliveryPerson = async (req, res) => {
   }
 };
 
-export const deleteDeliveryPerson = async (req, res) => {
+export const deleteDeliveryStaff = async (req, res) => {
   try {
     const { id } = req.params;
-    await DeliveryPerson.findByIdAndDelete(id);
+    await DeliveryStaff.findByIdAndDelete(id);
     res.json({ success: true, message: "Deleted" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });

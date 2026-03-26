@@ -2,7 +2,7 @@ import Order from "../models/Order.js";
 import Feedback from "../models/Feedback.js";
 import Budget from "../models/Budget.js";
 import Staff from "../models/Staff.js";
-import DeliveryPerson from "../models/DeliveryPerson.js";
+import DeliveryStaff from "../models/DeliveryStaff.js";
 
 // Generate System Report / Analytics Data
 export const getAnalytics = async (req, res) => {
@@ -28,7 +28,7 @@ export const getAnalytics = async (req, res) => {
 
     // 3. User Stats
     const totalStaff = await Staff.countDocuments();
-    const totalDelivery = await DeliveryPerson.countDocuments();
+    const totalDelivery = await DeliveryStaff.countDocuments();
     const staffCount = totalStaff + totalDelivery;
     const totalUsers = staffCount + 1; // plus 1 admin as approximation
 
