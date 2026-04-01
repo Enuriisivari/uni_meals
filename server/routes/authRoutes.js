@@ -7,6 +7,7 @@ import {
   loginDelivery,
   getAllDelivery,
   resetPasswordDelivery,
+  updatePassword,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/user/:id", getCurrentUser);
+router.post("/change-password", updatePassword);
 
 // Delivery person routes
 router.post("/delivery/register", registerDelivery);
