@@ -3,12 +3,17 @@ import {
   register,
   login,
   getCurrentUser,
+  updateProfile,
 } from "../controllers/authController.js";
+import { requireAuth } from "../middleware/authMiddleware.js";
+import { staffProfileUpload } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
+router.get("/me", requireAuth, getCurrentUser);
+router.put("/me", requireAuth, staffProfileUpload.single("avatar"), updateProfile);
 router.get("/user/:id", getCurrentUser);
 
 export default router;
