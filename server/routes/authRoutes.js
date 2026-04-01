@@ -8,6 +8,9 @@ import {
   getAllDelivery,
   resetPasswordDelivery,
   updatePassword,
+  updateDeliveryStaff,
+  toggleDeliveryStaffStatus,
+  deleteDeliveryStaff,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -22,5 +25,8 @@ router.post("/delivery/register", registerDelivery);
 router.post("/delivery/login", loginDelivery);
 router.get("/delivery/all", getAllDelivery);
 router.post("/delivery/reset-password", resetPasswordDelivery);
+router.put("/delivery/:id", updateDeliveryStaff);
+router.put("/delivery/:id/status", toggleDeliveryStaffStatus);
+router.delete("/delivery/:id", deleteDeliveryStaff);
 
 export default router;

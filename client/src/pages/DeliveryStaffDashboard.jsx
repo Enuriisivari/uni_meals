@@ -50,16 +50,28 @@ const DeliveryStaffDashboard = () => {
     fetchRealData();
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to permanently delete this delivery person?')) {
-      setDeliveryPersons(deliveryPersons.filter(p => p._id !== id));
+      try {
+        await axios.delete(`http://localhost:5000/api/auth/delivery/${id}`);
+        setDeliveryPersons(deliveryPersons.filter(p => p._id !== id));
+      } catch (err) {
+        console.error("Failed to delete", err);
+        alert(err.response?.data?.error || "Failed to delete");
+      }
     }
   };
 
-  const handleToggleStatus = (id) => {
-    setDeliveryPersons(deliveryPersons.map(p =>
-      p._id === id ? { ...p, isActive: !p.isActive } : p
-    ));
+  const handleToggleStatus = async (id) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/auth/delivery/${id}/status`);
+      setDeliveryPersons(deliveryPersons.map(p =>
+        p._id === id ? { ...p, isActive: response.data.isActive } : p
+      ));
+    } catch (err) {
+      console.error("Failed to toggle status", err);
+      alert(err.response?.data?.error || "Failed to update status");
+    }
   };
 
   const openAddModal = () => {
@@ -87,10 +99,21 @@ const DeliveryStaffDashboard = () => {
   const handleModalSubmit = async (e) => {
     e.preventDefault();
     if (editingId) {
-      setDeliveryPersons(deliveryPersons.map(p =>
-        p._id === editingId ? { ...p, ...formData } : p
-      ));
-      setIsModalOpen(false);
+      try {
+        const payload = {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        };
+        await axios.put(`http://localhost:5000/api/auth/delivery/${editingId}`, payload);
+        setDeliveryPersons(deliveryPersons.map(p =>
+          p._id === editingId ? { ...p, ...payload } : p
+        ));
+        setIsModalOpen(false);
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.error || "Failed to update person");
+      }
     } else {
       try {
         const payload = {
