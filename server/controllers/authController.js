@@ -2,7 +2,6 @@ import {
   registerUser,
   loginUser,
   getUserById,
-  changePassword,
 } from "../services/authService.js";
 
 export const register = async (req, res) => {
@@ -41,19 +40,5 @@ export const getCurrentUser = async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(404).json({ error: error.message });
-  }
-};
-
-export const updatePassword = async (req, res) => {
-  try {
-    const { email, currentPassword, newPassword } = req.body;
-
-    await changePassword(email, currentPassword, newPassword);
-
-    res.json({
-      message: "Password updated successfully",
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
   }
 };
