@@ -1,5 +1,6 @@
 import express from 'express';
 import DeliveryStaff from '../models/DeliveryStaff.js';
+import bcrypt from 'bcrypt';
 const router = express.Router();
 
 // GET all staff
@@ -10,7 +11,16 @@ router.get('/all', async (req, res) => {
 
 // ADD new staff
 router.post('/add', async (req, res) => {
-    const newStaff = new DeliveryStaff(req.body);
+    const { name, email, status } = req.body;
+    
+    // Check if email already exists
+    const existingStaff = await DeliveryStaff.findOne({ email });
+    if (existingStaff) {
+        return res.status(400).json({ error: "Email already exists" });
+    }
+    
+    const hashedPassword = await bcrypt.hash('password123', 10); // Default password
+    const newStaff = new DeliveryStaff({ name, email, status, password: hashedPassword });
     await newStaff.save();
     res.json(newStaff);
 });

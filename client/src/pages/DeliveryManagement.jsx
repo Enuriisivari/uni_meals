@@ -20,9 +20,13 @@ const DeliveryManagement = () => {
 
   const addStaff = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/delivery/add', { name, email, status: 'Available' });
-    setName(''); setEmail('');
-    fetchStaff();
+    try {
+      await axios.post('http://localhost:5000/api/delivery/add', { name, email, status: 'Available' });
+      setName(''); setEmail('');
+      fetchStaff();
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to add staff');
+    }
   };
 
   const handleAssignToken = async (id) => {
