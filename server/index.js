@@ -20,6 +20,10 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import feedbackRoutes from "./routes/feedback.routes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
+import canteenOrderRoutes from "./routes/canteenOrderRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
+import path from "node:path";
 
 const app = express();
 
@@ -27,6 +31,7 @@ connectDB();
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
@@ -40,6 +45,9 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/menu-items", menuRoutes);
+app.use("/api/canteen-orders", canteenOrderRoutes);
+app.use("/api/student", studentRoutes);
 
 app.get("/", (req, res) => {
   res.send("UniEats Backend Running");

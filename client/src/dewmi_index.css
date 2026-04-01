@@ -1,0 +1,43 @@
+﻿/* Font imports must stay above Tailwind. */
+@import "tailwindcss";
+
+:root {
+  --theme-navy-950: #0d1b52;
+  --theme-navy-900: #132c7a;
+  --theme-navy-700: #2648a5;
+  --theme-orange-500: #f58220;
+  --theme-orange-400: #ff9d4d;
+  --theme-orange-100: #fff1e2;
+  --theme-cream: #fffaf3;
+  --theme-surface: #ffffff;
+  --theme-muted: #f4f6fb;
+  --theme-border: #dfe5f2;
+  --theme-text: #172033;
+  --theme-subtle: #5f6983;
+}
+
+html {
+  background: linear-gradient(180deg, #f9fbff 0%, #fff8f1 100%);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--theme-text);
+  background:
+    radial-gradient(circle at top left, rgba(245, 130, 32, 0.14), transparent 28%),
+    linear-gradient(180deg, #f9fbff 0%, #fff8f1 100%);
+  font-family:
+    "Segoe UI",
+    "Trebuchet MS",
+    system-ui,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(245, 130, 32, 0.22);
+}
