@@ -205,8 +205,8 @@ export default function ChangePassword() {
           </button>
 
           <div className="change-pass-back">
-            <Link to="/profile" className="change-pass-backLink">
-              Back to Profile
+            <Link to="/edit-profile" className="change-pass-backLink">
+              Edit Profile
             </Link>
           </div>
         </form>

@@ -170,7 +170,7 @@ export default function EditProfile() {
 
               <div className="edit-formGrid">
                 <label className="edit-field">
-                  <div className="edit-label">FULL NAME</div>
+                  <div className="edit-label">User</div>
                   <input
                     className="edit-input"
                     value={fullName}
