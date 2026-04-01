@@ -10,8 +10,11 @@ const connectDB = async () => {
     console.log("MongoDB Connected");
   } catch (error) {
     console.error("Database connection failed:", error);
-    process.exit(1);
+    // Keep the server running for local dev/testing even when the DB URI is invalid.
+    // Routes that require DB data will still fail, but the app itself can start.
+    return null;
   }
 };
+
 
 export default connectDB;

@@ -1,38 +1,35 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import StudentLogin from './pages/StudentLogin.jsx'
-import SignUp from './pages/SignUp.jsx'
-import Canteens from './pages/Canteens.jsx'
-import Profile from './pages/Profile.jsx'
-import ForgotPassword from './pages/ForgotPassword.jsx'
-import ChangePassword from './pages/ChangePassword.jsx'
-import EditProfile from './pages/EditProfile.jsx'
-import CanteenMenu from './pages/CanteenMenu.jsx'
-import Orders from './pages/Orders.jsx'
-import TrackingOrder from './pages/TrackingOrder.jsx'
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-export default function App() {
+function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/canteens" element={<Canteens />} />
-        <Route
-          path="/orders"
-          element={<Orders />}
-        />
-        <Route
-          path="/profile"
-          element={<Profile />}
-        />
-        <Route path="/login" element={<StudentLogin />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/canteen-menu" element={<CanteenMenu />} />
-        <Route path="/tracking-order" element={<TrackingOrder />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
   )
 }
+
+export default App
