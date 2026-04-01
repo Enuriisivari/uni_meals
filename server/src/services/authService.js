@@ -44,3 +44,28 @@ export const getUserById = async (id) => {
 
   return user;
 };
+
+export const changePassword = async (email, currentPassword, newPassword) => {
+  // 1. Find user
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // 2. Check current password
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isMatch) {
+    throw new Error("Current password is incorrect");
+  }
+
+  // 3. Hash new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  // 4. Update password
+  user.password = hashedPassword;
+  await user.save();
+
+  return true;
+};
