@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import DeliveryPerson from "../models/deliveryPersonModel.js";
 import bcrypt from "bcrypt";
 
 export const registerUser = async (name, email, password) => {
@@ -43,4 +44,59 @@ export const getUserById = async (id) => {
   }
 
   return user;
+};
+
+export const registerDeliveryPerson = async (name, email, password, phone, vehicleType) => {
+  const existingPerson = await DeliveryPerson.findOne({ email });
+
+  if (existingPerson) {
+    throw new Error("Delivery person already exists");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const deliveryPerson = await DeliveryPerson.create({
+    name,
+    email,
+    password: hashedPassword,
+    phone,
+    vehicleType,
+  });
+
+  return deliveryPerson;
+};
+
+export const loginDeliveryPerson = async (email, password) => {
+  const deliveryPerson = await DeliveryPerson.findOne({ email });
+
+  if (!deliveryPerson) {
+    throw new Error("Invalid email or password");
+  }
+
+  const isMatch = await bcrypt.compare(password, deliveryPerson.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  return deliveryPerson;
+};
+
+export const getAllDeliveryPersons = async () => {
+  const deliveryPersons = await DeliveryPerson.find({}).select("-password");
+  return deliveryPersons;
+};
+
+export const resetDeliveryPersonPassword = async (email, newPassword) => {
+  const deliveryPerson = await DeliveryPerson.findOne({ email });
+  
+  if (!deliveryPerson) {
+    throw new Error("Delivery person not found");
+  }
+  
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  deliveryPerson.password = hashedPassword;
+  await deliveryPerson.save();
+  
+  return deliveryPerson;
 };
