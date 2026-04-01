@@ -4,19 +4,19 @@ import '../styles/admin.css';
 
 const Sidebar = () => {
   const menuItems = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: '📊' },
-    { name: 'Delivery Persons', path: '/admin/delivery', icon: '🚚' },
-    { name: 'Canteen Staff', path: '/admin/staff', icon: '👥' },
-    { name: 'Token Assignment', path: '/admin/tokens', icon: '🔑' },
-    { name: 'Staff ID Assignment', path: '/admin/staff-id', icon: '🏷️' },
-    { name: 'Orders Monitoring', path: '/admin/orders', icon: '📦' },
-    { name: 'Delivery Tracking', path: '/admin/tracking', icon: '📍' },
-    { name: 'Discounts', path: '/admin/discounts', icon: '💰' },
-    { name: 'Budgets', path: '/admin/budgets', icon: '📉' },
-    { name: 'Notifications', path: '/admin/notifications', icon: '🔔' },
-    { name: 'Reports', path: '/admin/reports', icon: '📑' },
-    { name: 'Analytics', path: '/admin/analytics', icon: '📈' },
-    { name: 'Feedback', path: '/admin/feedback', icon: '⭐' }
+    { name: 'Dashboard', path: '/admin/dashboard' },
+    { name: 'Delivery Persons', path: '/admin/delivery' },
+    { name: 'Canteen Staff', path: '/admin/staff' },
+    //{ name: 'Token Assignment', path: '/admin/tokens', icon: '🔑' },
+    //{ name: 'Staff ID Assignment', path: '/admin/staff-id', icon: '🏷️' },
+    { name: 'Orders Monitoring', path: '/admin/orders' },
+    { name: 'Delivery Tracking', path: '/admin/tracking'},
+    { name: 'Discounts', path: '/admin/discounts'},
+    { name: 'Budgets', path: '/admin/budgets' },
+    { name: 'Notifications', path: '/admin/notifications' },
+    //{ name: 'Reports', path: '/admin/reports', icon: '📑' },
+    { name: 'Analytics', path: '/admin/analytics'},
+    { name: 'Feedback', path: '/admin/feedback' }
   ];
 
   return (

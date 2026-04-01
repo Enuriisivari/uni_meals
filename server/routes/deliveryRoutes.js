@@ -22,7 +22,7 @@ router.put('/assign-token/:id', async (req, res) => {
 
         // Generate a "Smart Token"
         // Format: [Prefix based on rating]-[Random Hex]
-        const prefix = staff.rating >= 4.5 ? "ELITE" : "SWIFT";
+        const prefix = staff.rating >= 4.5 ? "DS" : "SWIFT";
         const randomPart = Math.random().toString(16).slice(2, 6).toUpperCase();
         const newToken = `${prefix}-${randomPart}`;
 

@@ -18,7 +18,8 @@ import BudgetManagement from './pages/BudgetManagement';
 import NotificationManagement from './pages/NotificationManagement';
 import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
-import FeedbackManagement from './pages/FeedbackManagement';
+import FeedbackForm from './components/Feedback/FeedbackForm';
+import FeedbackManagement from './components/Admin/FeedbackManagement';
 
 // Styles
 import './styles/admin.css';
@@ -51,8 +52,11 @@ function App() {
           <Route path="feedback" element={<FeedbackManagement />} />
         </Route>
 
+        {/* Public Feedback Page for Users */}
+        <Route path="/feedback" element={<FeedbackForm />} />
+
         {/* Default Redirect */}
-        <Route path="*" element={<Navigate to="/admin/login" replace />} />
+        <Route path="*" element={<Navigate to="/feedback" replace />} />
 
       </Routes>
     </Router>

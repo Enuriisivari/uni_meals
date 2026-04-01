@@ -31,14 +31,14 @@ const DeliveryManagement = () => {
   };
 
   return (
-    <div style={{ padding: '40px', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
-      <h2>🚚 Delivery Fleet Management</h2>
+    <div style={{ padding: '40px', backgroundColor: '#ffffff', minHeight: '100vh', color: '#000000' }}>
+      <h2>Delivery Staff Token Management</h2><br />
 
       {/* Add Staff Form */}
       <form onSubmit={addStaff} style={{ marginBottom: '30px', display: 'flex', gap: '10px' }}>
         <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required style={inputStyle} />
         <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputStyle} />
-        <button type="submit" style={btnPrimary}>Add Staff</button>
+        <button type="submit" style={btnPrimary}>Add Token</button>
       </form>
 
       {/* Staff Table */}
@@ -55,7 +55,7 @@ const DeliveryManagement = () => {
         <tbody>
           {staffList.map(s => (
             <tr key={s._id}>
-              <td style={tdStyle}>{s.name}</td>
+              <td style={{ color: 'black' }}>{s.name}</td>
               <td style={tdStyle}>
                 <span style={{ color: s.status === 'Available' ? 'green' : 'orange', fontWeight: 'bold' }}>
                   {s.status}
@@ -83,8 +83,8 @@ const DeliveryManagement = () => {
 };
 
 // Simple Styles
-const inputStyle = { padding: '10px', borderRadius: '5px', border: '1px solid #ccc' };
-const tdStyle = { padding: '15px', borderBottom: '1px solid #eee' };
+const inputStyle = { padding: '10px', borderRadius: '5px', border: '1px solid #111111' };
+const tdStyle = { padding: '15px', borderBottom: '1px solid #ffffff' };
 const btnPrimary = { backgroundColor: '#3498db', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer' };
 const btnAssign = { backgroundColor: '#2ecc71', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'pointer' };
 const btnDisabled = { backgroundColor: '#bdc3c7', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '5px', cursor: 'not-allowed' };

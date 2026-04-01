@@ -60,8 +60,8 @@ const AdminDashboard = () => {
           <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--admin-text-main)' }}>Notifications Preview</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ padding: '1rem', borderLeft: '4px solid var(--admin-warning)', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-              <p style={{ margin: 0, fontWeight: 500, color: '#92400e' }}>3 Pending Staff Approvals</p>
-              <p style={{ margin: '4px 0 0 0', fontSize: '0.875rem', color: '#b45309' }}>Action required in Staff Management.</p>
+              <p style={{ margin: 0, fontWeight: 500, color: '#92400e' }}></p>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.875rem', color: '#b45309' }}></p>
             </div>
             <div style={{ padding: '1rem', borderLeft: '4px solid var(--admin-success)', backgroundColor: '#d1fae5', borderRadius: '4px' }}>
               <p style={{ margin: 0, fontWeight: 500, color: '#065f46' }}>System Backup Completed</p>

@@ -34,7 +34,7 @@ const BudgetManagement = () => {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Department / Name</th>
+                <th>Name</th>
                 <th>Allocated Amount</th>
                 <th>Spent Amount</th>
                 <th>Remaining</th>

@@ -5,10 +5,12 @@ export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     // Dummy check for presentation
-    if (email === "admin@unieats.com" && password === "admin123") {
+    const normalizedEmail = (email || "").trim().toLowerCase();
+    const allowedEmails = ["admin@unieats.com", "admin@unimeals.com"];
+    if (allowedEmails.includes(normalizedEmail) && password === "admin123") {
       res.status(200).json({
         success: true,
-        data: { name: "System Admin", email },
+        data: { name: "System Admin", email: normalizedEmail },
         token: generateToken("admin_id_123")
       });
     } else {

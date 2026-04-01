@@ -17,7 +17,7 @@ import tokenRoutes from "./routes/tokenRoutes.js";
 import discountRoutes from "./routes/discountRoutes.js";
 import budgetRoutes from "./routes/budgetRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-import feedbackRoutes from "./routes/feedbackRoutes.js";
+import feedbackRoutes from "./routes/feedback.routes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 

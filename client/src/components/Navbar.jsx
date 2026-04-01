@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Navbar = () => {
+  
   return (
     <header className="admin-navbar" style={{ 
       backgroundColor: 'white', 
@@ -12,8 +13,10 @@ const Navbar = () => {
     }}>
       <div style={{ fontWeight: 'bold', color: 'var(--admin-text-main)' }}>Admin Portal</div>
       <div>
-        <span style={{ marginRight: '1rem', color: 'var(--admin-text-muted)' }}>Welcome, System Admin</span>
-        <button style={{
+        <span style={{ marginRight: '1rem', color: 'var(--admin-text-muted)' }}></span>
+        <button 
+        
+        style={{
           backgroundColor: 'var(--admin-secondary)',
           color: 'white',
           border: 'none',
