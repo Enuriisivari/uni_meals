@@ -8,6 +8,8 @@ const DeliveryLogin = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // For navigation after login
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -29,6 +31,7 @@ const DeliveryLogin = () => {
       }, 400); // Simulate network delay
       return;
     }
+    // Another dummy case for a delivery person
 
     if (email === 'test@unimeals.com' && password === '123456') {
       setTimeout(() => {
