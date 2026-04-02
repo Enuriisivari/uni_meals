@@ -1,1 +1,4 @@
 /* Removed Vite boilerplate CSS */
+#root {
+  min-height: 100vh;
+}

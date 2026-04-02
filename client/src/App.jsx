@@ -14,7 +14,11 @@ import EditProfile from './pages/EditProfile.jsx'
 import CanteenMenu from './pages/CanteenMenu.jsx'
 import Orders from './pages/Orders.jsx'
 import TrackingOrder from './pages/TrackingOrder.jsx'
+import { HomePage } from "./pages/HomePage";
+import { StudentDashboardPage } from "./pages/StudentDashboardPage";
+import { StaffPortalPage } from "./pages/StaffPortalPage";
 import './App.css'
+
 
 function App() {
   return (
@@ -35,7 +39,13 @@ function App() {
         <Route path="/delivery/forget-password" element={<ForgetPassword />} />
         <Route path="/delivery/dashboard" element={<DeliveryDashboard />} />
         <Route path="/admin/delivery-staff" element={<DeliveryStaffDashboard />} />
+          <Route path="/dashbord" element={<HomePage />} />
+          <Route path="/student" element={<StudentDashboardPage />} />
+          <Route path="/staff" element={<StaffPortalPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+
     </BrowserRouter>
   )
 }

@@ -20,33 +20,33 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="admin-sidebar" style={{ backgroundColor: 'var(--admin-primary)', color: 'white' }}>
-      <div className="admin-sidebar-header" style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <h2 style={{ color: 'var(--admin-secondary)', margin: 0 }}>UniMeals Admin</h2>
-      </div>
-      <nav className="admin-sidebar-nav" style={{ padding: '1rem 0' }}>
-        {menuItems.map((item, index) => (
-          <NavLink 
-            key={index} 
-            to={item.path}
-            className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
-            style={({ isActive }) => ({
-              display: 'flex',
-              padding: '0.75rem 1.5rem',
-              color: isActive ? 'white' : 'rgba(255,255,255,0.7)',
-              textDecoration: 'none',
-              backgroundColor: isActive ? 'var(--admin-secondary)' : 'transparent',
-              marginBottom: '0.25rem',
-              transition: 'background-color 0.2s',
-              borderLeft: isActive ? '4px solid white' : '4px solid transparent'
-            })}
-          >
-            <span style={{ marginRight: '0.75rem' }}>{item.icon}</span>
-            {item.name}
-          </NavLink>
-        ))}
-      </nav>
-    </aside>
+      <aside className="admin-sidebar" style={{ backgroundColor: 'var(--admin-primary)', color: 'white' }}>
+        <div className="admin-sidebar-header" style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 style={{ color: 'var(--admin-secondary)', margin: 0 }}>UniMeals Admin</h2>
+        </div>
+        <nav className="admin-sidebar-nav" style={{ padding: '1rem 0' }}>
+          {menuItems.map((item, index) => (
+              <NavLink
+                  key={index}
+                  to={item.path}
+                  className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
+                  style={({ isActive }) => ({
+                    display: 'flex',
+                    padding: '0.75rem 1.5rem',
+                    color: isActive ? 'white' : 'rgba(255,255,255,0.7)',
+                    textDecoration: 'none',
+                    backgroundColor: isActive ? 'var(--admin-secondary)' : 'transparent',
+                    marginBottom: '0.25rem',
+                    transition: 'background-color 0.2s',
+                    borderLeft: isActive ? '4px solid white' : '4px solid transparent'
+                  })}
+              >
+                <span style={{ marginRight: '0.75rem' }}>{item.icon}</span>
+                {item.name}
+              </NavLink>
+          ))}
+        </nav>
+      </aside>
   );
 };
 
