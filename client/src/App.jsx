@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import DeliveryLogin from './pages/DeliveryLogin'
 import ForgetPassword from './pages/ForgetPassword'
 import DeliveryDashboard from './pages/DeliveryDashboard'
@@ -22,7 +22,6 @@ import './App.css'
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/canteens" element={<Canteens />} />
@@ -45,8 +44,6 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-
-    </BrowserRouter>
   )
 }
 
