@@ -8,10 +8,6 @@ import path from "node:path";
 import menuRoutes from "./routes/menuRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
-dotenv.config();
-
-const app = express();
-
 // Connect DB
 connectDB();
 

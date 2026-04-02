@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Sidebar } from "../components/Sidebar";
+import { Sidebar } from "../components/DashboradSidebar";
 import { Header } from "../components/Header";
 import { DashboardPage } from "./DashboardPage";
 import { OrdersPage } from "./OrdersPage";

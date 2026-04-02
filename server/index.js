@@ -20,6 +20,8 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import feedbackRoutes from "./routes/feedback.routes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
 
 const app = express();
 
