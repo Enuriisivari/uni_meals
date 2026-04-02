@@ -4,7 +4,7 @@ import {
   getUserById,
   toSafeUser,
   updateUserProfile,
-} from "../services/authService.js";
+} from "../../services/authService.js";
 import { generateAuthToken } from "../utils/token.js";
 
 export const register = async (req, res) => {

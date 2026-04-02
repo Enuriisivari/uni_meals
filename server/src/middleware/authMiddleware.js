@@ -1,4 +1,4 @@
-import { getUserById } from "../services/authService.js";
+import { getUserById } from "../../services/authService.js";
 import { verifyAuthToken } from "../utils/token.js";
 
 export const requireAuth = async (req, res, next) => {

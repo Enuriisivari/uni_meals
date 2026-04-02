@@ -3,7 +3,7 @@ import {
   deleteMenuItem,
   getMenuItems,
   updateMenuItem,
-} from "../services/menuService.js";
+} from "../../services/menuService.js";
 
 export const listMenuItems = async (req, res) => {
   try {

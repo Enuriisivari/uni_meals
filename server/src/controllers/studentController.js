@@ -2,7 +2,7 @@ import {
   createStudentOrder,
   getStudentMenuItems,
   getStudentOrders,
-} from "../services/studentService.js";
+} from "../../services/studentService.js";
 
 export const listStudentMenuItems = async (req, res) => {
   try {

@@ -1,4 +1,7 @@
-import { getAllOrders, updateOrderStatus } from "../services/orderService.js";
+import {
+  getAllOrders,
+  updateOrderStatus,
+} from "../../services/orderService.js";
 
 export const listOrders = async (req, res) => {
   try {
