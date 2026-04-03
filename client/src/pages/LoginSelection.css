@@ -1,0 +1,218 @@
+.login-selection-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('https://images.unsplash.com/photo-1543353071-873f17a7a088?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-selection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(14, 25, 41, 0.778) 0%, rgba(13, 22, 38, 0.957) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.login-selection-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+  padding: 2rem;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.login-selection-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-selection-subtitle {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  margin-bottom: 3rem;
+  font-weight: 500;
+}
+
+.login-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.selection-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  backdrop-filter: blur(5px);
+}
+
+.selection-card:not(.no-hover-navigate):hover {
+  transform: translateY(-10px);
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.selection-card.no-hover-navigate {
+  cursor: default;
+}
+
+.selection-card.no-hover-navigate:hover {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+}
+
+.selection-card:hover .card-icon {
+  background: #6366f1;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: #818cf8;
+  transition: all 0.3s ease;
+}
+
+.card-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.selection-card h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.selection-card p {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.selection-btn {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.selection-card:hover .selection-btn {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+.selection-card.admin-card {
+  background: rgba(30, 41, 59, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.selection-card.admin-card:hover .card-icon {
+  background: #f43f5e;
+  color: #fff;
+}
+
+.selection-card.admin-card:hover {
+  border-color: rgba(244, 63, 94, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(244, 63, 94, 0.2);
+}
+
+.selection-card.admin-card:hover .selection-btn:not(.sub-btn) {
+  background: #f43f5e;
+  border-color: #f43f5e;
+}
+
+.sub-portal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.sub-btn {
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+}
+
+.sub-btn:hover {
+  background: #f43f5e !important;
+  border-color: #f43f5e !important;
+  transform: scale(1.05);
+}
+
+.back-to-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back-to-home:hover {
+  color: #fff;
+}
+
+.back-to-home svg {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .login-selection-title {
+    font-size: 2.5rem;
+  }
+}
