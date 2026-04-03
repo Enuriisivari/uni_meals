@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useMemo, useRef, useState } from 'react'
 import './CanteenMenu.css'
+import { useEffect } from 'react'
+import axios from 'axios'
 
 function CartIcon() {
   return (
@@ -31,17 +33,6 @@ function CartSmallIcon() {
   )
 }
 
-function IconStar() {
-  return (
-    <svg className="menu-star" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 2l3.1 6.6L22 9.2l-5 4.8L18.2 22 12 18.6 5.8 22 7 14l-5-4.8 6.9-.6L12 2z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
 function Badge({ text }) {
   return <span className="menu-badge">{text}</span>
 }
@@ -61,7 +52,7 @@ function MenuCard({ item, onAdd }) {
       <div className="menu-cardBody">
         <div className="menu-cardTop">
           <div className="menu-itemName">{item.name}</div>
-          <div className="menu-itemPrice">{item.price}</div>
+          <div className="menu-itemPrice">Rs. {item.price}</div>
         </div>
         <div className="menu-itemDesc">{item.description}</div>
         <button type="button" className="menu-addBtn" onClick={onAdd}>
@@ -73,86 +64,91 @@ function MenuCard({ item, onAdd }) {
   )
 }
 
+const CART_KEY = 'unimeals_cart'
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveCart(items) {
+  localStorage.setItem(CART_KEY, JSON.stringify(items))
+}
+
 export default function CanteenMenu() {
   const navigate = useNavigate()
   const location = useLocation()
   void location
 
-  const [trayCount, setTrayCount] = useState(3)
+  const [trayCount, setTrayCount] = useState(0)
   const [toastMsg, setToastMsg] = useState('')
   const toastTimerRef = useRef(null)
 
-  const menu = useMemo(() => {
-    // For now, we only need canteen 1 -> "Terrace Grill" UI.
-    return {
-      canteenName: 'Terrace Grill',
-      canteenSubtitle:
-        'Artisanal burgers, fresh seasonal salads, and signature bowls crafted daily at the heart of the North Campus.',
-      tags: ['All Menu', 'Burgers', 'Salads', 'Bowls'],
-      items: [
-        {
-          id: 1,
-          badgeLeft: 'POPULAR',
-          name: 'The Heritage Burger',
-          price: '$12.50',
-          description:
-            'Prime angus beef, aged cheddar, caramelized onions, and our secret smoked aioli on a toasted brioche bun.',
-          image:
-            'https://images.unsplash.com/photo-1550547660-d9450f859349?w=1200&q=80&auto=format&fit=crop',
-        },
-        {
-          id: 2,
-          name: 'Harvest Grain Bowl',
-          price: '$10.95',
-          description:
-            'Quinoa, roasted sweet potato, kale, pomegranate seeds, and a zesty lemon-tahini dressing.',
-          image:
-            'https://images.unsplash.com/photo-1541544181074-e9b0f0c35c8d?w=1200&q=80&auto=format&fit=crop',
-        },
-        {
-          id: 3,
-          badgeRight: 'GF',
-          name: 'Pacific Rim Bowl',
-          price: '$14.20',
-          description:
-            'Sashimi-style salmon, avocado, edamame, and pickled ginger over seasoned sushi rice.',
-          image:
-            'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&q=80&auto=format&fit=crop',
-        },
-        {
-          id: 4,
-          name: 'Crispy Avocado Wrap',
-          price: '$9.50',
-          description:
-            'Tempura avocado, spicy slaw, cilantro, and lime crema in a spinach tortilla.',
-          image:
-            'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=1200&q=80&auto=format&fit=crop',
-        },
-        {
-          id: 5,
-          name: 'Classic Terrace Caesar',
-          price: '$11.00',
-          description:
-            'Romaine hearts, garlic sourdough croutons, shaved parmesan-reggiano, and house dressing.',
-          image:
-            'https://images.unsplash.com/photo-1543339308-43e59dcb2b3b?w=1200&q=80&auto=format&fit=crop',
-        },
-        {
-          id: 6,
-          badgeRight: 'DAILY SPECIAL',
-          name: 'Artisan Flatbread',
-          price: '$8.75',
-          description:
-            'Hand-stretched dough topped with roasted mushrooms, truffle oil, and fresh thyme.',
-          image:
-            'https://images.unsplash.com/photo-1600628422019-4e9f5d9b1d10?w=1200&q=80&auto=format&fit=crop',
-        },
-      ],
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        setLoading(true)
+        const { data } = await axios.get('http://localhost:5000/api/student/menu-items')
+        setItems(Array.isArray(data) ? data : [])
+      } catch (error) {
+        console.error('Failed to fetch menu items', error)
+      } finally {
+        setLoading(false)
+      }
     }
+    fetchMenu()
   }, [])
 
-  function addItem() {
-    setTrayCount((c) => c + 1)
+  const menu = useMemo(() => {
+    return {
+      canteenName: 'Canteen Menu',
+      canteenSubtitle: 'Fresh menu items.',
+      tags: ['All Menu'],
+      items: items.map((it) => ({
+        id: it.id || it._id,
+        name: it.name || 'Untitled',
+        price: Number(it.price) || 0,
+        description: it.description || '',
+        image: it.imageUrl || 'https://via.placeholder.com/400x250?text=No+Image',
+      })),
+    }
+  }, [items])
+
+  function addItem(item) {
+    const cart = loadCart()
+    const existing = cart.find((c) => c.id === item.id)
+
+    let next
+    if (existing) {
+      next = cart.map((c) =>
+        c.id === item.id ? { ...c, qty: (c.qty || 1) + 1 } : c
+      )
+    } else {
+      next = [
+        ...cart,
+        {
+          id: item.id,
+          name: item.name,
+          unitPrice: item.price,
+          qty: 1,
+          image: item.image,
+          section: 'MENU ITEM',
+        },
+      ]
+    }
+
+    saveCart(next)
+
+    const count = next.reduce((sum, it) => sum + (it.qty || 1), 0)
+    setTrayCount(count)
+
     setToastMsg('Added to cart')
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
     toastTimerRef.current = window.setTimeout(() => setToastMsg(''), 1100)
@@ -160,29 +156,20 @@ export default function CanteenMenu() {
 
   return (
     <div className="menu-page">
-      {toastMsg ? (
-        <div className="menu-toast" role="status" aria-live="polite">
-          {toastMsg}
-        </div>
-      ) : null}
+      {toastMsg ? <div className="menu-toast" role="status" aria-live="polite">{toastMsg}</div> : null}
+
       <header className="menu-topnav">
         <div className="menu-topnav-inner">
           <Link to="/" className="menu-brand">
             UniMeals
           </Link>
           <nav className="menu-nav" aria-label="Main">
-            <Link to="/" className="menu-navLink">
-              Home
-            </Link>
+            <Link to="/" className="menu-navLink">Home</Link>
             <Link to="/canteens" className="menu-navLink menu-navLink--active">
               Canteens
             </Link>
-            <Link to="/orders" className="menu-navLink">
-              Orders
-            </Link>
-            <Link to="/profile" className="menu-navLink">
-              Profile
-            </Link>
+            <Link to="/orders" className="menu-navLink">Orders</Link>
+            <Link to="/profile" className="menu-navLink">Profile</Link>
           </nav>
 
           <button
@@ -213,7 +200,7 @@ export default function CanteenMenu() {
                   type="button"
                   className={'menu-chip' + (idx === 0 ? ' menu-chip--active' : '')}
                 >
-                  {t === 'All Menu' ? 'All Menu' : t}
+                  {t}
                 </button>
               ))}
             </div>
@@ -222,12 +209,18 @@ export default function CanteenMenu() {
 
         <section className="menu-gridWrap">
           <div className="menu-grid">
-            {menu.items.map((it) => (
-              <MenuCard key={it.id} item={it} onAdd={addItem} />
-            ))}
+            {loading ? (
+              <p>Loading menu...</p>
+            ) : menu.items.length === 0 ? (
+              <p>No menu items found.</p>
+            ) : (
+              menu.items.map((it) => (
+                <MenuCard key={it.id} item={it} onAdd={() => addItem(it)} />
+              ))
+            )}
           </div>
 
-          <aside className="menu-tray" aria-live="polite">
+          {/* <aside className="menu-tray" aria-live="polite">
             <div className="menu-tray-head">
               <IconStar />
               <div className="menu-trayTitle">YOUR TRAY</div>
@@ -238,10 +231,9 @@ export default function CanteenMenu() {
                 Checkout
               </button>
             </div>
-          </aside>
+          </aside> */}
         </section>
       </main>
     </div>
   )
 }
-

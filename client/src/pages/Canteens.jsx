@@ -1,5 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
 import './Canteens.css'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { getCanteensRequest } from '../api/canteens'
 
 function CartIcon() {
   return (
@@ -155,12 +158,26 @@ function CanteenCard({ canteen, showTrayOverlay, onSelect }) {
 
 export default function Canteens() {
   const navigate = useNavigate()
+  const [canteens, setCanteens] = useState(CANTEENS)
 
-  function handleSelect(canteenId) {
-    // As requested: when user clicks SELECT on the 1st canteen, show the UI.
-    if (canteenId === 1) {
-      navigate('/canteen-menu')
+  useEffect(() => {
+    let mounted = true
+    getCanteensRequest()
+      .then((data) => {
+        if (mounted && Array.isArray(data) && data.length > 0) {
+          setCanteens(data)
+        }
+      })
+      .catch(() => {
+        // keep dummy data on error
+      })
+    return () => {
+      mounted = false
     }
+  }, [])
+
+  function handleSelect() {
+    navigate('/canteen-menu')
   }
 
   return (
@@ -230,31 +247,19 @@ export default function Canteens() {
         </section>
 
         <section className="canteens-grid">
-          <CanteenCard
-            canteen={CANTEENS[0]}
-            onSelect={() => handleSelect(CANTEENS[0].id)}
-          />
-          <CanteenCard
-            canteen={CANTEENS[1]}
-            onSelect={() => handleSelect(CANTEENS[1].id)}
-          />
-          <CanteenCard
-            canteen={CANTEENS[2]}
-            onSelect={() => handleSelect(CANTEENS[2].id)}
-          />
-          <CanteenCard
-            canteen={CANTEENS[3]}
-            onSelect={() => handleSelect(CANTEENS[3].id)}
-          />
-          <CanteenCard
-            canteen={CANTEENS[4]}
-            showTrayOverlay
-            onSelect={() => handleSelect(CANTEENS[4].id)}
-          />
-          <CanteenCard
-            canteen={CANTEENS[5]}
-            onSelect={() => handleSelect(CANTEENS[5].id)}
-          />
+          {canteens.map((canteen, index) => (
+            <CanteenCard
+              key={canteen._id || canteen.id || index}
+              canteen={{
+                ...canteen,
+                image: canteen.imageUrl || canteen.image,
+                rating: canteen.rating ?? 0,
+                tags: canteen.tags || [],
+              }}
+              showTrayOverlay={index === 4}
+              onSelect={() => handleSelect()}
+            />
+          ))}
         </section>
       </main>
     </div>

@@ -19,6 +19,7 @@ import path from "node:path";
 import menuRoutes from "./routes/menuRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
+import canteenRoutes from "../routes/canteenRoutes.js";
 const app = express();
 
 // Connect DB
@@ -47,6 +48,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/uploads", express.static(path.resolve("uploads")));
 app.use("/api/menu-items", menuRoutes);
 app.use("/api/student", studentRoutes);
+app.use("/api/canteens", canteenRoutes);
 
 const PORT = process.env.PORT || 5000;
 

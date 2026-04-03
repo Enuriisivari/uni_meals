@@ -50,7 +50,22 @@ function Stepper({ value, onDec, onInc }) {
 }
 
 function toMoney(n) {
-  return `$${n.toFixed(2)}`
+  return `Rs. ${n.toFixed(2)}`
+}
+
+const CART_KEY = 'unimeals_cart'
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveCart(items) {
+  localStorage.setItem(CART_KEY, JSON.stringify(items))
 }
 
 export default function Orders() {
@@ -58,35 +73,11 @@ export default function Orders() {
   const [service, setService] = useState('Pickup')
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState('')
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 'a',
-      section: 'MAIN COURSE',
-      name: 'Artisan Harvest Bowl',
-      unitPrice: 12.5,
-      qty: 1,
-      image:
-        'https://images.unsplash.com/photo-1543362906-acfc16c67580?w=240&q=80&auto=format&fit=crop',
-    },
-    {
-      id: 'b',
-      section: 'PASTA BAR',
-      name: 'Wild Mushroom Tagliatelle',
-      unitPrice: 14.0,
-      qty: 2,
-      image:
-        'https://images.unsplash.com/photo-1604908554103-3a7f0d7f2c3b?w=240&q=80&auto=format&fit=crop',
-    },
-    {
-      id: 'c',
-      section: 'BEVERAGES',
-      name: 'Fresh Berry Lemonade',
-      unitPrice: 4.5,
-      qty: 1,
-      image:
-        'https://images.unsplash.com/photo-1541971875076-8f970d573be6?w=240&q=80&auto=format&fit=crop',
-    },
-  ])
+
+  const [cartItems, setCartItems] = useState(() => {
+    const stored = loadCart()
+    return stored.length > 0 ? stored : []
+  })
 
   const serviceFee = 1.5
 
@@ -107,32 +98,50 @@ export default function Orders() {
   }, [service])
 
   function inc(id) {
-    setCartItems((items) => items.map((it) => (it.id === id ? { ...it, qty: it.qty + 1 } : it)))
+    setCartItems((items) => {
+      const next = items.map((it) => (it.id === id ? { ...it, qty: it.qty + 1 } : it))
+      saveCart(next)
+      return next
+    })
   }
 
   function dec(id) {
-    setCartItems((items) =>
-      items.map((it) => {
+    setCartItems((items) => {
+      const next = items.map((it) => {
         if (it.id !== id) return it
         return { ...it, qty: Math.max(1, it.qty - 1) }
-      }),
-    )
+      })
+      saveCart(next)
+      return next
+    })
   }
 
   function remove(id) {
-    setCartItems((items) => items.filter((it) => it.id !== id))
+    setCartItems((items) => {
+      const next = items.filter((it) => it.id !== id)
+      saveCart(next)
+      return next
+    })
   }
 
   function handlePlaceOrder() {
-    // UI-only order placement
     const suffix = Math.floor(100000 + Math.random() * 900000)
     setOrderId(`#CC-${suffix}-U`)
     setOrderPlaced(true)
   }
 
   function handleTrackOrder() {
-    // Navigate to live tracking UI.
-    navigate('/tracking-order', { state: { orderId } })
+    navigate('/tracking-order', {
+      state: {
+        orderId,
+        items: cartItems,
+        total: totals.total,
+        subtotal: totals.subtotal,
+        serviceFee,
+        service,
+        deliveryMeta,
+      },
+    })
   }
 
   if (orderPlaced) {
@@ -177,44 +186,43 @@ export default function Orders() {
           <div className="orderPlaced-summaryCard">
             <div className="orderPlaced-summaryHead">Order Summary</div>
 
-            <div className="orderPlaced-line">
-              <img
-                src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=90&q=80&auto=format&fit=crop"
-                alt=""
-                className="orderPlaced-lineImg"
-              />
-              <div className="orderPlaced-lineInfo">
-                <div className="orderPlaced-lineName">Artisan Avocado Bowl</div>
-                <div className="orderPlaced-lineMeta">Qty: 1</div>
+            {cartItems.length === 0 ? (
+              <div className="orderPlaced-line">
+                <div className="orderPlaced-lineInfo">
+                  <div className="orderPlaced-lineName">No items found</div>
+                </div>
               </div>
-              <div className="orderPlaced-linePrice">₹180.00</div>
-            </div>
-
-            <div className="orderPlaced-line">
-              <img
-                src="https://images.unsplash.com/photo-1599785209707-28f2f0e6f3a6?w=90&q=80&auto=format&fit=crop"
-                alt=""
-                className="orderPlaced-lineImg"
-              />
-              <div className="orderPlaced-lineInfo">
-                <div className="orderPlaced-lineName">Cold Brew Classic</div>
-                <div className="orderPlaced-lineMeta">Qty: 2</div>
-              </div>
-              <div className="orderPlaced-linePrice">₹240.00</div>
-            </div>
+            ) : (
+              cartItems.map((it) => (
+                <div key={it.id} className="orderPlaced-line">
+                  <img
+                    src={it.image}
+                    alt=""
+                    className="orderPlaced-lineImg"
+                  />
+                  <div className="orderPlaced-lineInfo">
+                    <div className="orderPlaced-lineName">{it.name}</div>
+                    <div className="orderPlaced-lineMeta">Qty: {it.qty}</div>
+                  </div>
+                  <div className="orderPlaced-linePrice">
+                    {toMoney(it.unitPrice * it.qty)}
+                  </div>
+                </div>
+              ))
+            )}
 
             <div className="orderPlaced-summaryTotals">
               <div className="orderPlaced-totalLine">
                 <span>Subtotal</span>
-                <span>₹420.00</span>
+                <span>{toMoney(totals.subtotal)}</span>
               </div>
               <div className="orderPlaced-totalLine">
                 <span>Canteen Convenience Fee</span>
-                <span>₹15.00</span>
+                <span>{toMoney(serviceFee)}</span>
               </div>
               <div className="orderPlaced-totalGrand">
                 <span>Total Price</span>
-                <span>₹435.00</span>
+                <span>{toMoney(totals.total)}</span>
               </div>
             </div>
           </div>

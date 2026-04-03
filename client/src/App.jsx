@@ -44,6 +44,7 @@ import DeliveryForm from './components/DeliveryForm';
 import DeliveryTable from './components/DeliveryTable';
 import FeedbackForm from './components/Feedback/FeedbackForm';
 import FeedbackManagement from './components/Admin/FeedbackManagement';
+import CanteenManagement from './pages/CanteenManagement';
 
 // Styles
 import './App.css';
@@ -94,6 +95,7 @@ function App() {
         <Route path="staff" element={<StaffManagement />} />
         <Route path="tokens" element={<TokenAssignment />} />
         <Route path="feedback-management" element={<FeedbackManagement />} />
+        <Route path="canteens" element={<CanteenManagement />} />
 
         {/* UI Component Routes for direct preview */}
         <Route path="ui/staff-table" element={<StaffTable data={[]} />} />
