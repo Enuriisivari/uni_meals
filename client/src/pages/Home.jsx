@@ -163,7 +163,7 @@ export default function Home() {
             </Link>
           </nav>
           <div className="home-auth">
-            <Link to="/login" className="home-login">
+            <Link to="/login-selection" className="home-login">
               Login
             </Link>
             <Link to="/signup" className="home-btn home-btn--primary home-btn--sm">

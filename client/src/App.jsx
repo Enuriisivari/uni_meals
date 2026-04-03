@@ -4,6 +4,7 @@ import ForgetPassword from "./pages/ForgetPassword";
 import DeliveryDashboard from "./pages/DeliveryDashboard";
 import DeliveryStaffDashboard from "./pages/DeliveryStaffDashboard";
 import Home from "./pages/Home.jsx";
+import LoginSelection from "./pages/LoginSelection.jsx";
 import StudentLogin from "./pages/StudentLogin.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Canteens from "./pages/Canteens.jsx";
@@ -55,6 +56,7 @@ function App() {
       <Route path="/canteens" element={<Canteens />} />
       <Route path="/orders" element={<Orders />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/login-selection" element={<LoginSelection />} />
       <Route path="/login" element={<StudentLogin />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
