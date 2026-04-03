@@ -16,6 +16,7 @@ const Sidebar = () => {
     { name: 'Notifications', path: '/admin/notifications' },
     //{ name: 'Reports', path: '/admin/reports', icon: '📑' },
     { name: 'Analytics', path: '/admin/analytics'},
+    { name: 'Canteen Management', path: '/admin/canteens' },
     { name: 'Feedback', path: '/admin/feedback' }
   ];
 
