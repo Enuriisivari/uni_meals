@@ -19,6 +19,7 @@ import { HomePage } from "./pages/HomePage";
 import { StudentDashboardPage } from "./pages/StudentDashboardPage";
 import { StaffPortalPage } from "./pages/StaffPortalPage";
 import AdminLayout from './components/AdminLayout';
+import { DashboardPage } from "./pages/DashboardPage.jsx"
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
@@ -69,6 +70,7 @@ function App() {
       <Route path="/delivery/dashboard" element={<DeliveryDashboard />} />
       <Route path="/admin/delivery-staff" element={<DeliveryStaffDashboard />} />
       <Route path="/dashbord" element={<HomePage />} />
+      <Route path="/dashboardpage" element={<DashboardPage />} />
       <Route path="/student" element={<StudentDashboardPage />} />
       <Route path="/staff" element={<StaffPortalPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />

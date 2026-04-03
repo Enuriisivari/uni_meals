@@ -46,7 +46,7 @@ export function StaffPortalPage() {
   const [profileSuccess, setProfileSuccess] = useState("");
   const [readNotificationKeys, setReadNotificationKeys] = useState(() => {
     const storedKeys = localStorage.getItem(NOTIFICATION_READ_KEY);
-
+    
     if (!storedKeys) {
       return [];
     }
@@ -147,7 +147,7 @@ export function StaffPortalPage() {
     setAuthError("");
 
     try {
-      const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
+      const endpoint = mode === "login" ? "/auth/login-staff" : "/auth/register-staff";
       const payload =
         mode === "login" ? { email, password } : { name, email, password };
       const { data } = await api.post(endpoint, payload);
