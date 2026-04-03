@@ -7,7 +7,7 @@ import {
 } from "../../services/authService.js";
 import { generateAuthToken } from "../utils/token.js";
 
-export const register = async (req, res) => {
+export const registerStaff = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -23,7 +23,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+export const loginStaff = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await loginUser(email, password);
@@ -38,7 +38,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const getCurrentUser = async (req, res) => {
+export const getCurrentStaff = async (req, res) => {
   try {
     const user = req.user || (await getUserById(req.params.id));
     res.json(toSafeUser(user));
