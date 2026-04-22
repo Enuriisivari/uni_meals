@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
 import './TrackingOrder.css'
 
 function RunnerAvatar() {
@@ -13,6 +14,8 @@ function RunnerAvatar() {
 function toMoney(n) {
   return `Rs. ${Number(n || 0).toFixed(2)}`
 }
+
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 function StatusDot({ variant }) {
   return (
@@ -33,9 +36,13 @@ function StatusDot({ variant }) {
 export default function TrackingOrder() {
   const navigate = useNavigate()
   const location = useLocation()
+  const [orderData, setOrderData] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState('')
 
   const {
     orderId = '#CC-00000-U',
+    orderDbId = '',
     items = [],
     total = 0,
     subtotal = 0,
@@ -44,20 +51,69 @@ export default function TrackingOrder() {
     deliveryMeta = { expected: 'Today, 12:45 PM', pickupPoint: 'The Central Commons' },
   } = location?.state || {}
 
+  const normalizedOrderId = useMemo(() => {
+    const raw = String(orderDbId || orderId || '')
+    return raw.startsWith('#') ? raw.slice(1) : raw
+  }, [orderDbId, orderId])
+
   useEffect(() => {
     document.title = 'UniMeals'
   }, [])
 
+  useEffect(() => {
+    if (!normalizedOrderId) return
+
+    let active = true
+    const fetchOrder = async () => {
+      try {
+        setLoading(true)
+        setLoadError('')
+        const { data } = await axios.get(`${API_BASE_URL}/api/orders/${normalizedOrderId}`)
+        if (!active) return
+        setOrderData(data?.data || null)
+      } catch (error) {
+        if (!active) return
+        setLoadError(error?.response?.data?.message || 'Failed to load order details.')
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    fetchOrder()
+    return () => {
+      active = false
+    }
+  }, [normalizedOrderId])
+
   const estimatedArrival = deliveryMeta?.expected || 'Today, 12:45 PM'
 
   const status = useMemo(() => {
-    // simple fake status for now
+    const current = String(orderData?.status || '').toLowerCase()
+    const delivered = current === 'completed'
+    const outForDelivery = current === 'ready'
+    const preparing = ['pending', 'preparing', 'ready', 'completed'].includes(current)
+
     return {
-      preparing: true,
-      outForDelivery: service === 'Delivery',
-      delivered: false,
+      preparing,
+      outForDelivery,
+      delivered,
     }
-  }, [service])
+  }, [orderData?.status])
+
+  const viewItems = orderData?.items?.length
+    ? orderData.items.map((it, idx) => ({
+        id: `${it.menuItemId || it.name || 'item'}-${idx}`,
+        name: it.name || 'Menu Item',
+        qty: Number(it.quantity) || 1,
+        unitPrice: Number(it.price) || 0,
+      }))
+    : items
+
+  const viewSubtotal = orderData?.totalPrice ?? subtotal
+  const viewTotal = orderData?.totalPrice ?? total
+  const viewLocation = orderData?.deliveryLocation || deliveryMeta?.pickupPoint || 'Pickup point not set'
+  const viewNotes = orderData?.notes || ''
+  const displayOrderId = orderData?.id ? `#${orderData.id}` : orderId
 
   return (
     <div className="tracking-page">
@@ -77,10 +133,12 @@ export default function TrackingOrder() {
       <main className="tracking-main">
         <div className="tracking-hero">
           <div className="tracking-trackLabel">TRACK YOUR FEAST</div>
-          <h1 className="tracking-title">Order {orderId}</h1>
+          <h1 className="tracking-title">Order {displayOrderId}</h1>
           <div className="tracking-estArrival">
             Estimated Arrival: <b>{estimatedArrival}</b>
           </div>
+          {loading ? <div className="tracking-estArrival">Loading latest order details...</div> : null}
+          {loadError ? <div className="tracking-estArrival">{loadError}</div> : null}
         </div>
 
         <section className="tracking-topGrid">
@@ -102,7 +160,7 @@ export default function TrackingOrder() {
                 <div className="tracking-timelineBody">
                   <div className="tracking-statusName">Out for Delivery</div>
                   <div className="tracking-statusDesc">
-                    {service === 'Delivery' ? 'Courier is on the way.' : 'Pickup selected.'}
+                    {service === 'Delivery' ? 'Courier is on the way.' : 'Ready for pickup.'}
                   </div>
                   {status.outForDelivery && <div className="tracking-statusTag">IN TRANSIT</div>}
                 </div>
@@ -142,12 +200,12 @@ export default function TrackingOrder() {
         <section className="tracking-details">
           <div className="tracking-detailsTitle">Order Details</div>
           <div className="tracking-itemsList">
-            {items.length === 0 ? (
+            {viewItems.length === 0 ? (
               <div className="tracking-detailRow">
                 <div className="tracking-detailInfo">No items found.</div>
               </div>
             ) : (
-              items.map((it) => (
+              viewItems.map((it) => (
                 <div key={it.id} className="tracking-detailRow">
                   <div className="tracking-detailIcon">🍽️</div>
                   <div className="tracking-detailInfo">
@@ -167,10 +225,11 @@ export default function TrackingOrder() {
               {service === 'Delivery' ? 'DELIVERY TO' : 'PICKUP POINT'}
             </div>
             <div className="tracking-deliveryText">
-              {deliveryMeta?.pickupPoint || 'Pickup point not set'}
+              {viewLocation}
             </div>
+            {viewNotes ? <div className="tracking-deliveryText">Notes: {viewNotes}</div> : null}
             <div className="tracking-totalPaid">
-              SUBTOTAL {toMoney(subtotal)} • FEE {toMoney(serviceFee)} • TOTAL {toMoney(total)}
+              SUBTOTAL {toMoney(viewSubtotal)} • FEE {toMoney(serviceFee)} • TOTAL {toMoney(viewTotal)}
             </div>
           </div>
         </section>
