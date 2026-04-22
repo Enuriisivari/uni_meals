@@ -76,6 +76,8 @@ export default function Orders() {
   const [service, setService] = useState('Pickup')
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState('')
+  const [orderDbId, setOrderDbId] = useState('')
+  const [placedOrder, setPlacedOrder] = useState(null)
   const [placingOrder, setPlacingOrder] = useState(false)
   const [orderError, setOrderError] = useState('')
   const [specialNotes, setSpecialNotes] = useState('')
@@ -165,9 +167,17 @@ export default function Orders() {
     try {
       setPlacingOrder(true)
       setOrderError('')
+      const orderSnapshot = {
+        items: cartItems,
+        totals,
+        service,
+        deliveryMeta,
+      }
       const { data } = await axios.post(`${API_BASE_URL}/api/orders`, payload)
       const createdId = data?.data?.id || data?.order?.id || data?._id || data?.id || ''
+      setOrderDbId(createdId || '')
       setOrderId(createdId ? `#${createdId}` : 'Order created')
+      setPlacedOrder(orderSnapshot)
       setOrderPlaced(true)
       saveCart([])
       setCartItems([])
@@ -182,12 +192,13 @@ export default function Orders() {
     navigate('/tracking-order', {
       state: {
         orderId,
-        items: cartItems,
-        total: totals.total,
-        subtotal: totals.subtotal,
+        orderDbId,
+        items: placedOrder?.items || [],
+        total: placedOrder?.totals?.total || 0,
+        subtotal: placedOrder?.totals?.subtotal || 0,
         serviceFee,
-        service,
-        deliveryMeta,
+        service: placedOrder?.service || service,
+        deliveryMeta: placedOrder?.deliveryMeta || deliveryMeta,
       },
     })
   }
@@ -234,14 +245,14 @@ export default function Orders() {
           <div className="orderPlaced-summaryCard">
             <div className="orderPlaced-summaryHead">Order Summary</div>
 
-            {cartItems.length === 0 ? (
+            {!placedOrder?.items?.length ? (
               <div className="orderPlaced-line">
                 <div className="orderPlaced-lineInfo">
                   <div className="orderPlaced-lineName">No items found</div>
                 </div>
               </div>
             ) : (
-              cartItems.map((it) => (
+              placedOrder.items.map((it) => (
                 <div key={it.id} className="orderPlaced-line">
                   <img
                     src={it.image}
@@ -262,7 +273,7 @@ export default function Orders() {
             <div className="orderPlaced-summaryTotals">
               <div className="orderPlaced-totalLine">
                 <span>Subtotal</span>
-                <span>{toMoney(totals.subtotal)}</span>
+                <span>{toMoney(placedOrder?.totals?.subtotal || 0)}</span>
               </div>
               <div className="orderPlaced-totalLine">
                 <span>Canteen Convenience Fee</span>
@@ -270,7 +281,7 @@ export default function Orders() {
               </div>
               <div className="orderPlaced-totalGrand">
                 <span>Total Price</span>
-                <span>{toMoney(totals.total)}</span>
+                <span>{toMoney(placedOrder?.totals?.total || 0)}</span>
               </div>
             </div>
           </div>
