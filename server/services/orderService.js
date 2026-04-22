@@ -18,8 +18,21 @@ const toOrderResponse = (order) => ({
   })),
 });
 
-export const getAllOrders = async () => {
-  const orders = await Order.find().sort({ orderTime: -1 });
+const escapeRegex = (value) =>
+  String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+export const getAllOrders = async ({ status, studentName } = {}) => {
+  const query = {};
+
+  if (status) {
+    query.status = status;
+  }
+
+  if (studentName?.trim()) {
+    query.studentName = new RegExp(`^${escapeRegex(studentName.trim())}$`, "i");
+  }
+
+  const orders = await Order.find(query).sort({ orderTime: -1 });
   return orders.map(toOrderResponse);
 };
 

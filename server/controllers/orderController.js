@@ -7,11 +7,8 @@ import { createStudentOrder } from "../services/studentService.js";
 
 export const getOrders = async (req, res) => {
   try {
-    const { status } = req.query;
-    let orders = await getAllOrders();
-    if (status) {
-      orders = orders.filter((o) => o.status === status);
-    }
+    const { status, studentName } = req.query;
+    const orders = await getAllOrders({ status, studentName });
     res.status(200).json({ success: true, count: orders.length, data: orders });
   } catch (error) {
     res.status(500).json({
