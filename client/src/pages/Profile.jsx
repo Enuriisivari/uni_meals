@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
 import './Profile.css'
 
 const USER_KEY = 'uni_meals_user'
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 function SafeUser() {
   try {
@@ -83,12 +85,59 @@ function Footer() {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const user = SafeUser()
+  const user = useMemo(() => SafeUser(), [])
+  const [recentOrders, setRecentOrders] = useState([])
+  const [ordersLoading, setOrdersLoading] = useState(false)
+  const [ordersError, setOrdersError] = useState('')
   const studentEmail = String(user?.email || '')
   const studentIdFromEmail = studentEmail.includes('@')
     ? studentEmail.split('@')[0]
     : ''
   const displayName = studentIdFromEmail || user?.name || 'Student'
+
+  useEffect(() => {
+    if (!user) return
+
+    let active = true
+    const fetchRecentOrders = async () => {
+      try {
+        setOrdersLoading(true)
+        setOrdersError('')
+        const { data } = await axios.get(`${API_BASE_URL}/api/orders`, {
+          params: { studentName: displayName },
+        })
+        if (!active) return
+
+        const orders = Array.isArray(data?.data) ? data.data : []
+        setRecentOrders(orders.slice(0, 5))
+      } catch (error) {
+        if (!active) return
+        setOrdersError(error?.response?.data?.message || 'Failed to load recent orders.')
+      } finally {
+        if (active) setOrdersLoading(false)
+      }
+    }
+
+    fetchRecentOrders()
+    return () => {
+      active = false
+    }
+  }, [displayName])
+
+  function openTrackOrder(order) {
+    if (!order?.id) return
+    navigate('/tracking-order', {
+      state: {
+        orderDbId: order.id,
+        orderId: `#${order.id}`,
+        service: 'Pickup',
+        deliveryMeta: {
+          expected: 'Today',
+          pickupPoint: order.deliveryLocation || 'Pickup point not set',
+        },
+      },
+    })
+  }
 
   function signOut() {
     localStorage.removeItem(USER_KEY)
@@ -202,45 +251,66 @@ export default function Profile() {
             <div className="profile-ordersSection">
               <div className="profile-ordersHead">
                 <div className="profile-ordersTitle">Recent Orders</div>
-                <Link className="profile-viewAll" to="/orders">
-                  View All
-                </Link>
               </div>
               <div className="profile-ordersSubtitle">
-                Your culinary journey so far
+                Last 5 orders
               </div>
 
               <div className="profile-recentList">
-                <div className="profile-recentRow">
-                  <div className="profile-recentLeft">
-                    <div className="profile-recentIcon">📜</div>
-                    <div>
-                      <div className="profile-recentName">Artisan Pepperoni Pizza</div>
-                      <div className="profile-recentMeta">Oct 24 · Chapters Cafe</div>
+                {ordersLoading ? (
+                  <div className="profile-recentRow">
+                    <div className="profile-recentLeft">
+                      <div>
+                        <div className="profile-recentName">Loading orders...</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="profile-recentPrice">$12.50</div>
-                </div>
-                <div className="profile-recentRow">
-                  <div className="profile-recentLeft">
-                    <div className="profile-recentIcon">🍔</div>
-                    <div>
-                      <div className="profile-recentName">Double Smash Burger Combo</div>
-                      <div className="profile-recentMeta">Oct 22 · The Blueprint Bistro</div>
+                ) : ordersError ? (
+                  <div className="profile-recentRow">
+                    <div className="profile-recentLeft">
+                      <div>
+                        <div className="profile-recentName">{ordersError}</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="profile-recentPrice">$15.90</div>
-                </div>
-                <div className="profile-recentRow">
-                  <div className="profile-recentLeft">
-                    <div className="profile-recentIcon">🥗</div>
-                    <div>
-                      <div className="profile-recentName">Vegan Buddha Bowl</div>
-                      <div className="profile-recentMeta">Oct 20 · Green Garden</div>
+                ) : recentOrders.length === 0 ? (
+                  <div className="profile-recentRow">
+                    <div className="profile-recentLeft">
+                      <div>
+                        <div className="profile-recentName">No recent orders.</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="profile-recentPrice">$10.00</div>
-                </div>
+                ) : (
+                  recentOrders.map((order) => (
+                    <div key={order.id} className="profile-recentRow">
+                      <div className="profile-recentLeft">
+                        <div className="profile-recentIcon">🍽️</div>
+                        <div>
+                          <div className="profile-recentName">
+                            {order.items?.[0]?.name || 'Order item'}
+                            {order.items?.length > 1 ? ` +${order.items.length - 1} more` : ''}
+                          </div>
+                          <div className="profile-recentMeta">
+                            {new Date(order.createdAt || order.orderTime || Date.now()).toLocaleDateString()} ·{' '}
+                            {order.status || 'pending'} · {order.deliveryLocation || 'Pickup'}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="profile-recentPrice">
+                        <div>Rs. {Number(order.totalPrice || 0).toFixed(2)}</div>
+                        <button
+                          type="button"
+                          className="profile-viewAll cursor-pointer"
+                          onClick={() => openTrackOrder(order)}
+                          style={{ marginTop: '0.35rem', display: 'inline-block' }}
+                        >
+                          Track
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
