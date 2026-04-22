@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import './Orders.css'
 
 function TrashIcon() {
@@ -54,6 +55,8 @@ function toMoney(n) {
 }
 
 const CART_KEY = 'unimeals_cart'
+const USER_KEY = 'uni_meals_user'
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 function loadCart() {
   try {
@@ -73,11 +76,30 @@ export default function Orders() {
   const [service, setService] = useState('Pickup')
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState('')
+  const [placingOrder, setPlacingOrder] = useState(false)
+  const [orderError, setOrderError] = useState('')
+  const [specialNotes, setSpecialNotes] = useState('')
 
   const [cartItems, setCartItems] = useState(() => {
     const stored = loadCart()
     return stored.length > 0 ? stored : []
   })
+  const [deliveryLocation, setDeliveryLocation] = useState('')
+
+  const user = useMemo(() => {
+    try {
+      const raw = localStorage.getItem(USER_KEY)
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  }, [])
+
+  const studentName = useMemo(() => {
+    const studentEmail = String(user?.email || '')
+    const studentIdFromEmail = studentEmail.includes('@') ? studentEmail.split('@')[0] : ''
+    return studentIdFromEmail || user?.name || 'Student'
+  }, [user])
 
   const serviceFee = 1.5
 
@@ -124,10 +146,36 @@ export default function Orders() {
     })
   }
 
-  function handlePlaceOrder() {
-    const suffix = Math.floor(100000 + Math.random() * 900000)
-    setOrderId(`#CC-${suffix}-U`)
-    setOrderPlaced(true)
+  async function handlePlaceOrder() {
+    if (cartItems.length === 0) {
+      setOrderError('Your cart is empty.')
+      return
+    }
+
+    const payload = {
+      studentName,
+      deliveryLocation: deliveryLocation.trim() || deliveryMeta.pickupPoint,
+      notes: specialNotes.trim(),
+      items: cartItems.map((it) => ({
+        menuItemId: it.id,
+        quantity: Number(it.qty) || 1,
+      })),
+    }
+
+    try {
+      setPlacingOrder(true)
+      setOrderError('')
+      const { data } = await axios.post(`${API_BASE_URL}/api/orders`, payload)
+      const createdId = data?.data?.id || data?.order?.id || data?._id || data?.id || ''
+      setOrderId(createdId ? `#${createdId}` : 'Order created')
+      setOrderPlaced(true)
+      saveCart([])
+      setCartItems([])
+    } catch (error) {
+      setOrderError(error?.response?.data?.message || 'Failed to place order. Please try again.')
+    } finally {
+      setPlacingOrder(false)
+    }
   }
 
   function handleTrackOrder() {
@@ -333,6 +381,46 @@ export default function Orders() {
 
               <div className="orders-divider" />
 
+              <div className="orders-cardTitle orders-summaryTitle">Order Details</div>
+              <div className="orders-fieldGroup">
+                <label className="orders-fieldLabel" htmlFor="orders-student-name">
+                  Student Name
+                </label>
+                <input
+                  id="orders-student-name"
+                  className="orders-fieldInput"
+                  value={studentName}
+                  readOnly
+                />
+              </div>
+              <div className="orders-fieldGroup">
+                <label className="orders-fieldLabel" htmlFor="orders-delivery-location">
+                  {service === 'Delivery' ? 'Delivery Location' : 'Pickup Location'}
+                </label>
+                <input
+                  id="orders-delivery-location"
+                  className="orders-fieldInput"
+                  value={deliveryLocation}
+                  onChange={(e) => setDeliveryLocation(e.target.value)}
+                  placeholder={deliveryMeta.pickupPoint}
+                />
+              </div>
+              <div className="orders-fieldGroup">
+                <label className="orders-fieldLabel" htmlFor="orders-special-notes">
+                  Special Notes
+                </label>
+                <textarea
+                  id="orders-special-notes"
+                  className="orders-fieldInput orders-fieldInput--textarea"
+                  value={specialNotes}
+                  onChange={(e) => setSpecialNotes(e.target.value)}
+                  placeholder="Add notes for kitchen or delivery person (optional)"
+                  rows={3}
+                />
+              </div>
+
+              <div className="orders-divider" />
+
               <div className="orders-cardTitle orders-summaryTitle">Order Summary</div>
 
               <div className="orders-summaryLine">
@@ -373,8 +461,15 @@ export default function Orders() {
                 </div>
               </div>
 
-              <button type="button" className="orders-placeBtn" onClick={handlePlaceOrder}>
-                Place Order
+              {orderError ? <div className="orders-errorText">{orderError}</div> : null}
+
+              <button
+                type="button"
+                className="orders-placeBtn"
+                onClick={handlePlaceOrder}
+                disabled={placingOrder || cartItems.length === 0}
+              >
+                {placingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
 
               <div className="orders-secureNote">SECURE UNIVERSITY CHECKOUT</div>

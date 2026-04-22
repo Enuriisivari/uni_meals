@@ -250,6 +250,47 @@
   margin: 1rem 0 1.1rem;
 }
 
+.orders-fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+  margin-bottom: 0.78rem;
+}
+
+.orders-fieldLabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+  color: #7a8794;
+  text-transform: uppercase;
+}
+
+.orders-fieldInput {
+  width: 100%;
+  border: 1px solid #dbe4ee;
+  background: #fff;
+  border-radius: 11px;
+  padding: 0.68rem 0.82rem;
+  color: #152c48;
+  font-weight: 700;
+  font-size: 0.93rem;
+}
+
+.orders-fieldInput::placeholder {
+  color: #98a5b3;
+}
+
+.orders-fieldInput:focus {
+  outline: none;
+  border-color: #e86d2a;
+  box-shadow: 0 0 0 3px rgba(232, 109, 42, 0.12);
+}
+
+.orders-fieldInput--textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
 .orders-summaryTitle {
   margin-bottom: 0.75rem;
   font-size: 1rem;
@@ -335,6 +376,22 @@
 
 .orders-placeBtn:hover {
   filter: brightness(0.98);
+}
+
+.orders-placeBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.orders-errorText {
+  margin-top: 0.6rem;
+  padding: 0.62rem 0.72rem;
+  border-radius: 10px;
+  border: 1px solid #f3c4c4;
+  background: #fff4f4;
+  color: #a43131;
+  font-weight: 800;
+  font-size: 0.88rem;
 }
 
 .orders-trackBtn {
