@@ -17,7 +17,7 @@ import reportRoutes from "../routes/reportRoutes.js";
 import analyticsRoutes from "../routes/analyticsRoutes.js";
 import path from "node:path";
 import menuRoutes from "./routes/menuRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
+import orderRoutes from "../routes/orderRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import canteenRoutes from "../routes/canteenRoutes.js";
 const app = express();

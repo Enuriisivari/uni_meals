@@ -10,7 +10,7 @@ import { menuItemUpload } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", requireAuth, listMenuItems);
+router.get("/", listMenuItems);
 router.post("/", requireAuth, menuItemUpload.single("image"), addMenuItem);
 router.put("/:id", requireAuth, menuItemUpload.single("image"), editMenuItem);
 router.delete("/:id", requireAuth, removeMenuItem);

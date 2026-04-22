@@ -23,6 +23,12 @@ export const getAllOrders = async () => {
   return orders.map(toOrderResponse);
 };
 
+export const getOrderById = async (id) => {
+  const order = await Order.findById(id);
+  if (!order) return null;
+  return toOrderResponse(order);
+};
+
 export const updateOrderStatus = async (id, status) => {
   const validStatuses = [
     "pending",
