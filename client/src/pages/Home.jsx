@@ -183,31 +183,8 @@ export default function Home() {
             Browse canteens, order food, and skip the queue! The digital campus cafeteria in your
             pocket.
           </p>
-          <div className="home-search">
-            <IconSearch />
-            <input
-              type="search"
-              className="home-search-input"
-              placeholder="Search canteens or your favorite food..."
-              aria-label="Search canteens or food"
-            />
-            <button type="button" className="home-btn home-btn--primary home-search-cta">
-              Order Now
-            </button>
-          </div>
         </div>
       </section>
-
-      <div className="home-tray-wrap">
-        <div className="home-tray">
-          <IconBasket />
-          <span className="home-tray-label">TRAY SUBTOTAL:</span>
-          <span className="home-tray-amount">$0.00</span>
-          <button type="button" className="home-btn home-btn--navy home-btn--sm">
-            View Tray
-          </button>
-        </div>
-      </div>
 
       <section className="home-section home-quick">
         <div className="home-container">
@@ -325,19 +302,6 @@ export default function Home() {
               <a href="#" className="home-store-btn">
                 Google Play
               </a>
-            </div>
-          </div>
-          <div className="home-promo-phone" aria-hidden="true">
-            <div className="home-phone-frame">
-              <div className="home-phone-header">Your Tray</div>
-              <p className="home-phone-sub">3 ITEMS</p>
-              <ul className="home-phone-list">
-                <li>Quinoa Salad bowl</li>
-                <li>Fresh Orange Juice</li>
-              </ul>
-              <button type="button" className="home-phone-checkout">
-                Checkout $11.50
-              </button>
             </div>
           </div>
         </div>
