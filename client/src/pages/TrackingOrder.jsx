@@ -91,9 +91,9 @@ export default function TrackingOrder() {
 
   const status = useMemo(() => {
     const current = String(orderData?.status || '').toLowerCase()
-    const delivered = current === 'completed'
-    const outForDelivery = current === 'ready'
-    const preparing = ['pending', 'preparing', 'ready', 'completed'].includes(current)
+    const delivered = current === 'completed' || current === 'delivered'
+    const outForDelivery = current === 'ready' || current === 'out for delivery'
+    const preparing = current === 'pending' || current === 'preparing'
 
     return {
       preparing,
