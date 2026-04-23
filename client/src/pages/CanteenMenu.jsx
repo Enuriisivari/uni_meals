@@ -22,7 +22,7 @@ function Badge({ text }) {
   return <span className="menu-badge">{text}</span>
 }
 
-function MenuCard({ item, onAdd }) {
+function MenuCard({ item, onAdd, canAddToCart }) {
   const badgeLeft = item.badgeLeft ? <Badge text={item.badgeLeft} /> : null
   const badgeRight = item.badgeRight ? <Badge text={item.badgeRight} /> : null
 
@@ -40,9 +40,15 @@ function MenuCard({ item, onAdd }) {
           <div className="menu-itemPrice">Rs. {item.price}</div>
         </div>
         <div className="menu-itemDesc">{item.description}</div>
-        <button type="button" className="menu-addBtn" onClick={onAdd}>
+        <button
+          type="button"
+          className="menu-addBtn"
+          onClick={onAdd}
+          disabled={!canAddToCart}
+          title={!canAddToCart ? 'Please login to add items' : 'Add to cart'}
+        >
           <CartSmallIcon />
-          Add to Cart
+          {canAddToCart ? 'Add to Cart' : 'Login to Add'}
         </button>
       </div>
     </article>
@@ -50,6 +56,8 @@ function MenuCard({ item, onAdd }) {
 }
 
 const CART_KEY = 'unimeals_cart'
+const USER_KEY = 'uni_meals_user'
+const TOKEN_KEY = 'uni_meals_token'
 
 function loadCart() {
   try {
@@ -70,6 +78,13 @@ export default function CanteenMenu() {
 
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
+  const isLoggedIn = useMemo(() => {
+    try {
+      return Boolean(localStorage.getItem(USER_KEY) && localStorage.getItem(TOKEN_KEY))
+    } catch {
+      return false
+    }
+  }, [])
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -102,6 +117,13 @@ export default function CanteenMenu() {
   }, [items])
 
   function addItem(item) {
+    if (!isLoggedIn) {
+      setToastMsg('Please login first to add items to cart.')
+      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
+      toastTimerRef.current = window.setTimeout(() => setToastMsg(''), 1200)
+      return
+    }
+
     const cart = loadCart()
     const existing = cart.find((c) => c.id === item.id)
 
@@ -167,7 +189,7 @@ export default function CanteenMenu() {
               <p>No menu items found.</p>
             ) : (
               menu.items.map((it) => (
-                <MenuCard key={it.id} item={it} onAdd={() => addItem(it)} />
+                <MenuCard key={it.id} item={it} onAdd={() => addItem(it)} canAddToCart={isLoggedIn} />
               ))
             )}
           </div>

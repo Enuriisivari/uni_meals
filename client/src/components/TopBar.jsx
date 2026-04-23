@@ -101,7 +101,7 @@ export default function TopBar({ showCart = true }) {
         </nav>
 
         <div className="topbar-actions">
-          {showCart ? (
+          {showCart && isLoggedIn ? (
             <button type="button" className="topbar-cart-btn" onClick={() => navigate('/orders')} aria-label="Open cart">
               <CartIcon />
               {cartCount > 0 ? <span className="topbar-cart-badge">{cartBadge}</span> : null}
