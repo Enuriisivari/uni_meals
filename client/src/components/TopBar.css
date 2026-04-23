@@ -1,0 +1,116 @@
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #eef2f7;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-inner {
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topbar-brand {
+  color: #152c48;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.topbar-link {
+  color: #5c6b7a;
+  text-decoration: none;
+  font-weight: 800;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid transparent;
+}
+
+.topbar-link:hover {
+  color: #152c48;
+}
+
+.topbar-link--active {
+  color: #152c48;
+  border-bottom-color: #e86d2a;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.topbar-cart-btn {
+  position: relative;
+  border: 1px solid #dbe4ee;
+  background: #fff;
+  color: #203c68;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.topbar-cart-btn:hover {
+  background: #f8fafc;
+}
+
+.topbar-cart-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.topbar-cart-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #e86d2a;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #fff;
+}
+
+.topbar-auth-btn {
+  border: none;
+  background: #e86d2a;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 0.52rem 1.05rem;
+  cursor: pointer;
+}
+
+.topbar-auth-btn:hover {
+  filter: brightness(0.98);
+}
+
+@media (max-width: 900px) {
+  .topbar-nav {
+    gap: 1rem;
+  }
+}
