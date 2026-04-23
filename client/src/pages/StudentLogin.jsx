@@ -77,6 +77,7 @@ function IconMail() {
 }
 
 const USER_KEY = 'uni_meals_user'
+const TOKEN_KEY = 'uni_meals_token'
 
 export default function StudentLogin() {
   const navigate = useNavigate()
@@ -98,20 +99,13 @@ export default function StudentLogin() {
       }
 
       const data = await loginRequest({ email: cleanEmail, password })
-      // Backend may return either `{ user: {...} }` or `{ userId }` depending on version.
-      if (data.user) {
-        localStorage.setItem(USER_KEY, JSON.stringify(data.user))
-      } else if (data.userId) {
-        localStorage.setItem(
-          USER_KEY,
-          JSON.stringify({
-            id: data.userId,
-            name: data.name || 'Student',
-            email: data.email || email,
-          }),
-        )
+      if (!data?.user || !data?.token) {
+        throw new Error('Invalid login response from server.')
       }
-      navigate('/')
+
+      localStorage.setItem(USER_KEY, JSON.stringify(data.user))
+      localStorage.setItem(TOKEN_KEY, data.token)
+      navigate('/profile')
     } catch (err) {
       const data = err.response?.data
       const msg =
