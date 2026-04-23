@@ -150,6 +150,7 @@ export default function Home() {
       <section className="home-hero" style={{ '--hero-bg': `url(${HERO_BG})` }}>
         <div className="home-hero-overlay" />
         <div className="home-hero-content">
+          <span className="home-hero-badge">Campus dining, reimagined</span>
           <h1 className="home-hero-title">
             Order Your Favorite <span className="home-text-accent">Campus Meals</span> Easily.
           </h1>
@@ -157,6 +158,41 @@ export default function Home() {
             Browse canteens, order food, and skip the queue! The digital campus cafeteria in your
             pocket.
           </p>
+          <div className="home-hero-actions">
+            <Link to="/canteens" className="home-btn home-btn--primary home-btn--lg">
+              Explore Canteens
+            </Link>
+            <Link to="/orders" className="home-btn home-btn--ghost home-btn--lg">
+              View My Orders
+            </Link>
+          </div>
+          <div className="home-hero-proof">
+            <span className="home-proof-item">
+              <IconSearch />
+              20+ canteens
+            </span>
+            <span className="home-proof-item">
+              <IconBasket />
+              Fast checkout
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-metrics">
+        <div className="home-container home-metrics-grid">
+          <article className="home-metric-card">
+            <div className="home-metric-value">4.8/5</div>
+            <div className="home-metric-label">Average student rating</div>
+          </article>
+          <article className="home-metric-card">
+            <div className="home-metric-value">Under 10m</div>
+            <div className="home-metric-label">Typical prep visibility</div>
+          </article>
+          <article className="home-metric-card">
+            <div className="home-metric-value">Daily</div>
+            <div className="home-metric-label">Fresh menu refreshes</div>
+          </article>
         </div>
       </section>
 
@@ -169,7 +205,7 @@ export default function Home() {
               <p className="home-feature-text">
                 Pick a canteen, add dishes to your tray, and pay securely in seconds.
               </p>
-              <span className="home-feature-link">EXPLORE MENU →</span>
+              <Link to="/canteens" className="home-feature-link">EXPLORE MENU →</Link>
             </article>
             <article className="home-feature-card">
               <IconTruck />
@@ -177,7 +213,7 @@ export default function Home() {
               <p className="home-feature-text">
                 Follow prep status in real time and know exactly when your meal is ready.
               </p>
-              <span className="home-feature-link">CHECK STATUS →</span>
+              <Link to="/orders" className="home-feature-link">CHECK STATUS →</Link>
             </article>
             <article className="home-feature-card">
               <IconMenu />
@@ -185,7 +221,7 @@ export default function Home() {
               <p className="home-feature-text">
                 See weekly specials, dietary tags, and prices before you line up.
               </p>
-              <span className="home-feature-link">WEEKLY PLAN →</span>
+              <Link to="/canteens" className="home-feature-link">WEEKLY PLAN →</Link>
             </article>
           </div>
         </div>
@@ -214,9 +250,9 @@ export default function Home() {
                   <p className="home-canteen-meta">
                     {c.location} <span aria-hidden="true">•</span> {c.cuisine}
                   </p>
-                  <button type="button" className="home-btn home-btn--primary home-btn--block">
+                  <Link to="/canteen-menu" className="home-btn home-btn--primary home-btn--block">
                     View Menu
-                  </button>
+                  </Link>
                 </div>
               </article>
             ))}

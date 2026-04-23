@@ -124,6 +124,21 @@
   padding: 0.5rem 1.25rem;
 }
 
+.home-btn--lg {
+  padding: 0.7rem 1.45rem;
+  font-size: 0.94rem;
+}
+
+.home-btn--ghost {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.home-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
 .home-btn--block {
   width: 100%;
   padding: 0.65rem 1rem;
@@ -162,6 +177,22 @@
   text-align: center;
 }
 
+.home-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #f8fbff;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+}
+
 .home-hero-title {
   margin: 0 0 1rem;
   font-size: clamp(1.85rem, 4.5vw, 2.75rem);
@@ -181,6 +212,35 @@
   font-size: 1.05rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.92);
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.home-hero-proof {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.home-proof-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.home-proof-item .home-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .home-search {
@@ -270,9 +330,44 @@
   padding: 3rem 0;
 }
 
+.home-metrics {
+  margin-top: -2.25rem;
+  position: relative;
+  z-index: 3;
+  padding: 0 0 1.2rem;
+}
+
+.home-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.home-metric-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+  padding: 1rem 1.1rem;
+}
+
+.home-metric-value {
+  color: var(--color-navy);
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.home-metric-label {
+  margin-top: 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .home-quick {
   background: var(--color-bg);
-  padding-top: 4rem;
+  padding-top: 2.5rem;
   padding-bottom: 3rem;
 }
 
@@ -321,6 +416,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--color-navy);
+  text-decoration: none;
 }
 
 .home-feature-card:hover .home-feature-link {
@@ -648,6 +744,10 @@
 
 /* Responsive */
 @media (max-width: 960px) {
+  .home-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
   .home-nav {
     display: none;
   }
