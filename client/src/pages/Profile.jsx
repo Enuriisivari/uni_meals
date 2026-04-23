@@ -4,6 +4,7 @@ import axios from 'axios'
 import './Profile.css'
 
 const USER_KEY = 'uni_meals_user'
+const TOKEN_KEY = 'uni_meals_token'
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 function SafeUser() {
@@ -85,7 +86,10 @@ function Footer() {
 
 export default function Profile() {
   const navigate = useNavigate()
-  const user = useMemo(() => SafeUser(), [])
+  const token = localStorage.getItem(TOKEN_KEY) || ''
+  const [user, setUser] = useState(() => SafeUser())
+  const [profileLoading, setProfileLoading] = useState(false)
+  const [profileError, setProfileError] = useState('')
   const [recentOrders, setRecentOrders] = useState([])
   const [ordersLoading, setOrdersLoading] = useState(false)
   const [ordersError, setOrdersError] = useState('')
@@ -94,6 +98,42 @@ export default function Profile() {
     ? studentEmail.split('@')[0]
     : ''
   const displayName = studentIdFromEmail || user?.name || 'Student'
+  const activeOrder = useMemo(
+    () => recentOrders.find((order) => ['pending', 'preparing', 'ready'].includes(order.status)),
+    [recentOrders],
+  )
+  const completedCount = useMemo(
+    () => recentOrders.filter((order) => order.status === 'completed').length,
+    [recentOrders],
+  )
+
+  useEffect(() => {
+    if (!token) return
+
+    let active = true
+    const fetchCurrentStudent = async () => {
+      try {
+        setProfileLoading(true)
+        setProfileError('')
+        const { data } = await axios.get(`${API_BASE_URL}/api/auth/student/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (!active) return
+        setUser(data || null)
+        localStorage.setItem(USER_KEY, JSON.stringify(data || {}))
+      } catch (error) {
+        if (!active) return
+        setProfileError(error?.response?.data?.error || 'Failed to load profile data.')
+      } finally {
+        if (active) setProfileLoading(false)
+      }
+    }
+
+    fetchCurrentStudent()
+    return () => {
+      active = false
+    }
+  }, [token])
 
   useEffect(() => {
     if (!user) return
@@ -103,9 +143,7 @@ export default function Profile() {
       try {
         setOrdersLoading(true)
         setOrdersError('')
-        const { data } = await axios.get(`${API_BASE_URL}/api/orders`, {
-          params: { studentName: displayName },
-        })
+        const { data } = await axios.get(`${API_BASE_URL}/api/orders`, { params: { studentName: displayName } })
         if (!active) return
 
         const orders = Array.isArray(data?.data) ? data.data : []
@@ -122,7 +160,7 @@ export default function Profile() {
     return () => {
       active = false
     }
-  }, [displayName])
+  }, [displayName, user])
 
   function openTrackOrder(order) {
     if (!order?.id) return
@@ -141,6 +179,7 @@ export default function Profile() {
 
   function signOut() {
     localStorage.removeItem(USER_KEY)
+    localStorage.removeItem(TOKEN_KEY)
     navigate('/')
   }
 
@@ -197,6 +236,7 @@ export default function Profile() {
 
           <div className="profile-userInfo">
             <div className="profile-userName">{displayName}</div>
+            {profileError ? <div className="profile-ordersSubtitle">{profileError}</div> : null}
             <div className="profile-userMeta">
               <span className="profile-metaItem">
                 <span className="profile-metaIcon">🆔</span>
@@ -204,11 +244,15 @@ export default function Profile() {
               </span>
               <span className="profile-metaItem">
                 <span className="profile-metaIcon">🎓</span>
-                Computer Science
+                Student
               </span>
               <span className="profile-metaItem">
                 <span className="profile-metaIcon">✉️</span>
                 {user.email || '—'}
+              </span>
+              <span className="profile-metaItem">
+                <span className="profile-metaIcon">📦</span>
+                Orders: {recentOrders.length}
               </span>
             </div>
           </div>
@@ -227,25 +271,45 @@ export default function Profile() {
           <div className="profile-leftCol">
             <div className="profile-orderCard">
               <div className="profile-orderTop">
-                <span className="profile-orderBadge">ONGOING ORDER</span>
-                <span className="profile-orderId">Order #1234</span>
+                <span className="profile-orderBadge">{activeOrder ? 'ONGOING ORDER' : 'NO ACTIVE ORDER'}</span>
+                <span className="profile-orderId">
+                  {activeOrder ? `Order #${String(activeOrder.id).slice(0, 8)}` : '--'}
+                </span>
               </div>
               <div className="profile-orderSub">
-                From The Blueprint Bistro
+                {activeOrder
+                  ? `${activeOrder.items?.[0]?.name || 'Order item'} (${activeOrder.status})`
+                  : 'No pending orders right now. You can place a new one from menu.'}
                 <span className="profile-orderX" aria-hidden="true">
-                  ✕
+                  {activeOrder ? '•' : ''}
                 </span>
               </div>
               <div className="profile-progressWrap">
                 <div className="profile-progressRow">
                   <span className="profile-progressDot">▪</span>
                   <div>
-                    <div className="profile-progressTitle">Preparing your meal</div>
-                    <div className="profile-progressEta">Estimated ready in 12 minutes</div>
+                    <div className="profile-progressTitle">
+                      {activeOrder ? `Status: ${activeOrder.status}` : 'Recent completed orders'}
+                    </div>
+                    <div className="profile-progressEta">
+                      {activeOrder
+                        ? `Delivery: ${activeOrder.deliveryLocation || 'Pickup'}`
+                        : `${completedCount} completed in your latest 5 orders`}
+                    </div>
                   </div>
                 </div>
                 <div className="profile-progressBar" />
               </div>
+              {activeOrder ? (
+                <button
+                  type="button"
+                  className="profile-editBtn"
+                  style={{ marginTop: '0.9rem' }}
+                  onClick={() => openTrackOrder(activeOrder)}
+                >
+                  Track Active Order
+                </button>
+              ) : null}
             </div>
 
             <div className="profile-ordersSection">
@@ -257,11 +321,11 @@ export default function Profile() {
               </div>
 
               <div className="profile-recentList">
-                {ordersLoading ? (
+                {profileLoading || ordersLoading ? (
                   <div className="profile-recentRow">
                     <div className="profile-recentLeft">
                       <div>
-                        <div className="profile-recentName">Loading orders...</div>
+                        <div className="profile-recentName">Loading account data...</div>
                       </div>
                     </div>
                   </div>
@@ -293,7 +357,7 @@ export default function Profile() {
                           </div>
                           <div className="profile-recentMeta">
                             {new Date(order.createdAt || order.orderTime || Date.now()).toLocaleDateString()} ·{' '}
-                            {order.status || 'pending'} · {order.deliveryLocation || 'Pickup'}
+                            {(order.status || 'pending').toUpperCase()} · {order.deliveryLocation || 'Pickup'}
                           </div>
                         </div>
                       </div>
@@ -334,36 +398,34 @@ export default function Profile() {
               >
                 <div className="profile-settingLeft">
                   <span className="profile-settingIcon">🔒</span>
-                  Security & Password
+                  Edit Profile & Password
                 </div>
                 <span className="profile-settingChevron">›</span>
               </Link>
-              <div className="profile-settingRow">
+              <button
+                type="button"
+                className="profile-settingRow profile-settingRow--link"
+                style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer' }}
+                onClick={signOut}
+              >
                 <div className="profile-settingLeft">
-                  <span className="profile-settingIcon">💳</span>
-                  Payment Methods
+                  <span className="profile-settingIcon">🚪</span>
+                  Sign Out
                 </div>
                 <span className="profile-settingChevron">›</span>
-              </div>
-              <div className="profile-settingRow profile-settingRow--last">
-                <div className="profile-settingLeft">
-                  <span className="profile-settingIcon">⚙️</span>
-                  App Preferences
-                </div>
-                <span className="profile-settingChevron">›</span>
-              </div>
+              </button>
             </div>
 
             <div className="profile-card profile-favs">
-              <div className="profile-cardTitle">Favorites</div>
+              <div className="profile-cardTitle">Quick Stats</div>
               <div className="profile-favTiles">
                 <div className="profile-favTile">
                   <div className="profile-favImg" />
-                  <div className="profile-favName">The Blueprint Bistro</div>
+                  <div className="profile-favName">Recent Orders: {recentOrders.length}</div>
                 </div>
                 <div className="profile-favTile">
                   <div className="profile-favImg profile-favImg--2" />
-                  <div className="profile-favName">Chapters Cafe</div>
+                  <div className="profile-favName">Completed: {completedCount}</div>
                 </div>
               </div>
             </div>
