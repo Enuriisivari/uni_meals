@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       default: "canteen_staff",
-      enum: ["canteen_staff"],
+      enum: ["canteen_staff", "student"],
     },
     avatarUrl: {
       type: String,

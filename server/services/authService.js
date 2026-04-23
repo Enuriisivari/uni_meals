@@ -37,6 +37,34 @@ export const registerUser = async (name, email, password) => {
   return user;
 };
 
+export const registerUserWithRole = async (name, email, password, role) => {
+  if (!["canteen_staff", "student"].includes(role)) {
+    throw new Error("Invalid role");
+  }
+
+  if (!name?.trim() || !email?.trim() || !password?.trim()) {
+    throw new Error("Name, email, and password are required");
+  }
+
+  const normalizedEmail = normalizeEmail(email);
+  const existingUser = await User.findOne({ email: normalizedEmail });
+
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    name: name.trim(),
+    email: normalizedEmail,
+    password: hashedPassword,
+    role,
+  });
+
+  return user;
+};
+
 export const loginUser = async (email, password) => {
   if (!email?.trim() || !password?.trim()) {
     throw new Error("Email and password are required");
@@ -52,6 +80,20 @@ export const loginUser = async (email, password) => {
 
   if (!isMatch) {
     throw new Error("Invalid email or password");
+  }
+
+  return user;
+};
+
+export const getUserByEmail = async (email) => {
+  if (!email?.trim()) {
+    throw new Error("Email is required");
+  }
+
+  const user = await User.findOne({ email: normalizeEmail(email) });
+
+  if (!user) {
+    throw new Error("User not found");
   }
 
   return user;
@@ -99,4 +141,27 @@ export const updateUserProfile = async (id, payload) => {
   await user.save();
 
   return user;
+};
+
+export const deleteUserById = async (id) => {
+  const deleted = await User.findByIdAndDelete(id);
+
+  if (!deleted) {
+    throw new Error("User not found");
+  }
+};
+
+export const resetUserPasswordByEmail = async (email, newPassword) => {
+  if (!email?.trim() || !newPassword?.trim()) {
+    throw new Error("Email and newPassword are required");
+  }
+
+  const user = await User.findOne({ email: normalizeEmail(email) });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
 };
