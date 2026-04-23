@@ -1,7 +1,9 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import './TrackingOrder.css'
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 function RunnerAvatar() {
   return (
@@ -117,18 +119,7 @@ export default function TrackingOrder() {
 
   return (
     <div className="tracking-page">
-      <header className="tracking-topnav">
-        <div className="tracking-topnav-inner">
-          <Link to="/" className="tracking-serviceName">UniMeals</Link>
-          <nav className="tracking-nav" aria-label="Main">
-            <Link to="/" className="tracking-navLink">Home</Link>
-            <Link to="/canteens" className="tracking-navLink">Canteens</Link>
-            <Link to="/orders" className="tracking-navLink tracking-navLink--active">Orders</Link>
-            <Link to="/profile" className="tracking-navLink">Profile</Link>
-          </nav>
-          <div className="tracking-cart" aria-hidden="true">🛒</div>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="tracking-main">
         <div className="tracking-hero">
@@ -243,6 +234,7 @@ export default function TrackingOrder() {
           💬
         </button>
       </main>
+      <Footer />
     </div>
   )
 }

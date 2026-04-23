@@ -1,24 +1,9 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useMemo, useRef, useState } from 'react'
 import './CanteenMenu.css'
 import { useEffect } from 'react'
 import axios from 'axios'
-
-function CartIcon() {
-  return (
-    <svg className="menu-cartIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M6 7h15l-1.5 9h-12L6 7z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="M6 7L5 3H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="9" cy="20" r="1" fill="currentColor" />
-      <circle cx="18" cy="20" r="1" fill="currentColor" />
-    </svg>
-  )
-}
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 function CartSmallIcon() {
   return (
@@ -80,11 +65,6 @@ function saveCart(items) {
 }
 
 export default function CanteenMenu() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  void location
-
-  const [trayCount, setTrayCount] = useState(0)
   const [toastMsg, setToastMsg] = useState('')
   const toastTimerRef = useRef(null)
 
@@ -146,9 +126,6 @@ export default function CanteenMenu() {
 
     saveCart(next)
 
-    const count = next.reduce((sum, it) => sum + (it.qty || 1), 0)
-    setTrayCount(count)
-
     setToastMsg('Added to cart')
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
     toastTimerRef.current = window.setTimeout(() => setToastMsg(''), 1100)
@@ -157,32 +134,7 @@ export default function CanteenMenu() {
   return (
     <div className="menu-page">
       {toastMsg ? <div className="menu-toast" role="status" aria-live="polite">{toastMsg}</div> : null}
-
-      <header className="menu-topnav">
-        <div className="menu-topnav-inner">
-          <Link to="/" className="menu-brand">
-            UniMeals
-          </Link>
-          <nav className="menu-nav" aria-label="Main">
-            <Link to="/" className="menu-navLink">Home</Link>
-            <Link to="/canteens" className="menu-navLink menu-navLink--active">
-              Canteens
-            </Link>
-            <Link to="/orders" className="menu-navLink">Orders</Link>
-            <Link to="/profile" className="menu-navLink">Profile</Link>
-          </nav>
-
-          <button
-            type="button"
-            className="menu-cartBtn"
-            aria-label="Open cart"
-            onClick={() => navigate('/orders')}
-          >
-            <CartIcon />
-            <span className="menu-cartBadge">{trayCount}</span>
-          </button>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="menu-main">
         <section className="menu-hero">
@@ -234,6 +186,7 @@ export default function CanteenMenu() {
           </aside> */}
         </section>
       </main>
+      <Footer />
     </div>
   )
 }

@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import './Profile.css'
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 const USER_KEY = 'uni_meals_user'
 const TOKEN_KEY = 'uni_meals_token'
@@ -29,59 +31,6 @@ function Avatar({ name }) {
   }, [name])
 
   return <div className="profile-avatar">{initials}</div>
-}
-
-function Footer() {
-  return (
-    <footer className="profile-footer">
-      <div className="profile-footer-inner">
-        <div className="profile-footer-col">
-          <div className="profile-footer-brand">UniMeals</div>
-          <p className="profile-footer-text">
-            Elevating campus dining through curated experiences and digital ease.
-          </p>
-        </div>
-        <div className="profile-footer-col">
-          <div className="profile-footer-head">Explore</div>
-          <a className="profile-footer-link" href="#">
-            Campus Canteens
-          </a>
-          <a className="profile-footer-link" href="#">
-            Daily Specials
-          </a>
-          <a className="profile-footer-link" href="#">
-            Dietary Filters
-          </a>
-        </div>
-        <div className="profile-footer-col">
-          <div className="profile-footer-head">Support</div>
-          <a className="profile-footer-link" href="#">
-            Help Center
-          </a>
-          <a className="profile-footer-link" href="#">
-            Contact Us
-          </a>
-          <a className="profile-footer-link" href="#">
-            Privacy Policy
-          </a>
-        </div>
-        <div className="profile-footer-col">
-          <div className="profile-footer-head">Connect</div>
-          <div className="profile-social-row">
-            <a className="profile-social" href="#" aria-label="Google">
-              G
-            </a>
-            <a className="profile-social" href="#" aria-label="Chat">
-              @
-            </a>
-          </div>
-        </div>
-      </div>
-      <div className="profile-footer-copy">
-        © 2024 UNI MEALS. ALL RIGHTS RESERVED. PART OF UNIVERSITY SERVICES.
-      </div>
-    </footer>
-  )
 }
 
 export default function Profile() {
@@ -199,34 +148,7 @@ export default function Profile() {
 
   return (
     <div className="profile-page">
-      <header className="profile-topnav">
-        <div className="profile-topnav-inner">
-          <Link to="/" className="profile-brand">
-            UniMeals
-          </Link>
-          <nav className="profile-nav" aria-label="Main">
-            <Link to="/" className="profile-nav-link">
-              Home
-            </Link>
-            <Link to="/canteens" className="profile-nav-link">
-              Canteens
-            </Link>
-            <Link to="/orders" className="profile-nav-link">
-              Orders
-            </Link>
-            <Link to="/profile" className="profile-nav-link profile-nav-link--active">
-              Profile
-            </Link>
-          </nav>
-          <div className="profile-topnav-actions" aria-hidden="true">
-            <div className="profile-bell">🔔</div>
-            <div className="profile-cart">🛒</div>
-            <div className="profile-usrDot">
-              <Avatar name={user.name} />
-            </div>
-          </div>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="profile-main">
         <section className="profile-userCard">

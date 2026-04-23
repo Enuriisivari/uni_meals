@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './EditProfile.css'
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 const USER_KEY = 'uni_meals_user'
 const TOKEN_KEY = 'uni_meals_token'
@@ -178,27 +180,7 @@ export default function EditProfile() {
           {toastMsg}
         </div>
       ) : null}
-      <header className="edit-topnav">
-        <div className="edit-topnav-inner">
-          <Link to="/" className="edit-brand">
-            UniMeals
-          </Link>
-          <nav className="edit-nav" aria-label="Main">
-            <Link to="/" className="edit-navLink">
-              Home
-            </Link>
-            <Link to="/canteens" className="edit-navLink">
-              Canteens
-            </Link>
-            <Link to="/orders" className="edit-navLink">
-              Orders
-            </Link>
-            <Link to="/profile" className="edit-navLink edit-navLink--active">
-              Profile
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="edit-main">
         <div className="edit-header">
@@ -334,6 +316,7 @@ export default function EditProfile() {
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   )
 }

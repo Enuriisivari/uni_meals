@@ -1,24 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import './Canteens.css'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { getCanteensRequest } from '../api/canteens'
-
-function CartIcon() {
-  return (
-    <svg className="canteens-cart-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M6 7h15l-1.5 9h-12L6 7z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="M6 7L5 3H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="9" cy="20" r="1" fill="currentColor" />
-      <circle cx="18" cy="20" r="1" fill="currentColor" />
-    </svg>
-  )
-}
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 function Star() {
   return (
@@ -182,32 +168,7 @@ export default function Canteens() {
 
   return (
     <div className="canteens-page">
-      <header className="canteens-topnav">
-        <div className="canteens-topnav-inner">
-          <Link to="/" className="canteens-brand">
-            UniMeals
-          </Link>
-
-          <nav className="canteens-nav" aria-label="Main">
-            <Link to="/" className="canteens-nav-link">
-              Home
-            </Link>
-            <Link to="/canteens" className="canteens-nav-link canteens-nav-link--active">
-              Canteens
-            </Link>
-            <Link to="/orders" className="canteens-nav-link">
-              Orders
-            </Link>
-            <Link to="/profile" className="canteens-nav-link">
-              Profile
-            </Link>
-          </nav>
-
-          <button type="button" className="canteens-cart-btn" aria-label="Open tray">
-            <CartIcon />
-          </button>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="canteens-main">
         <section className="canteens-hero">
@@ -262,6 +223,7 @@ export default function Canteens() {
           ))}
         </section>
       </main>
+      <Footer />
     </div>
   )
 }

@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import './Home.css'
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 const HERO_BG =
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80&auto=format&fit=crop'
@@ -143,35 +145,7 @@ function IconTray() {
 export default function Home() {
   return (
     <div className="home">
-      <header className="home-header">
-        <div className="home-header-inner">
-          <Link to="/" className="home-logo">
-            Uni Meals
-          </Link>
-          <nav className="home-nav" aria-label="Main">
-            <Link to="/" className="home-nav-link home-nav-link--active">
-              Home
-            </Link>
-            <Link to="/canteens" className="home-nav-link">
-              Canteens
-            </Link>
-            <Link to="/orders" className="home-nav-link">
-              Orders
-            </Link>
-            <Link to="/profile" className="home-nav-link">
-              Profile
-            </Link>
-          </nav>
-          <div className="home-auth">
-            <Link to="/login-selection" className="home-login">
-              Login
-            </Link>
-            <Link to="/signup" className="home-btn home-btn--primary home-btn--sm">
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </header>
+      <TopBar />
 
       <section className="home-hero" style={{ '--hero-bg': `url(${HERO_BG})` }}>
         <div className="home-hero-overlay" />
@@ -307,22 +281,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="home-footer">
-        <div className="home-container home-footer-inner">
-          <div className="home-footer-brand">
-            <span className="home-logo">Uni Meals</span>
-            <p className="home-footer-tagline">
-              Revolutionizing campus dining—one order, one tray, one happy student at a time.
-            </p>
-          </div>
-          <nav className="home-footer-links" aria-label="Footer">
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Help</a>
-          </nav>
-          <p className="home-footer-copy">© 2024 Uni Meals. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

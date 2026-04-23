@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './Orders.css'
+import TopBar from '../components/TopBar.jsx'
+import Footer from '../components/Footer.jsx'
 
 function TrashIcon() {
   return (
@@ -206,33 +208,7 @@ export default function Orders() {
   if (orderPlaced) {
     return (
       <div className="orderPlaced-page">
-        <header className="orders-topnav">
-          <div className="orders-topnav-inner">
-            <Link to="/" className="orders-brand">
-              UniMeals
-            </Link>
-            <nav className="orders-nav" aria-label="Main">
-              <Link to="/" className="orders-navLink">
-                Home
-              </Link>
-              <Link to="/canteens" className="orders-navLink">
-                Canteens
-              </Link>
-              <Link
-                to="/orders"
-                className="orders-navLink orders-navLink--active"
-              >
-                Orders
-              </Link>
-              <Link to="/profile" className="orders-navLink">
-                Profile
-              </Link>
-            </nav>
-            <div className="orders-topnavRight" aria-hidden="true">
-              🔔 🛒 👤
-            </div>
-          </div>
-        </header>
+        <TopBar />
 
         <main className="orderPlaced-main">
           <div className="orderPlaced-iconCircle" aria-hidden="true">
@@ -312,36 +288,14 @@ export default function Orders() {
             Return to Home
           </button>
         </main>
+        <Footer />
       </div>
     )
   }
 
   return (
     <div className="orders-page">
-      <header className="orders-topnav">
-        <div className="orders-topnav-inner">
-          <Link to="/" className="orders-brand">
-            UniMeals
-          </Link>
-          <nav className="orders-nav" aria-label="Main">
-            <Link to="/" className="orders-navLink">
-              Home
-            </Link>
-            <Link to="/canteens" className="orders-navLink">
-              Canteens
-            </Link>
-            <Link to="/orders" className="orders-navLink orders-navLink--active">
-              Orders
-            </Link>
-            <Link to="/profile" className="orders-navLink">
-              Profile
-            </Link>
-          </nav>
-          <div className="orders-topnavRight" aria-hidden="true">
-            🔔 🛒 👤
-          </div>
-        </div>
-      </header>
+      <TopBar />
 
       <main className="orders-main">
         <section className="orders-head">
@@ -488,6 +442,7 @@ export default function Orders() {
           </aside>
         </section>
       </main>
+      <Footer />
     </div>
   )
 }
