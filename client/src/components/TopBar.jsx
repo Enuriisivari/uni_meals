@@ -76,7 +76,7 @@ export default function TopBar({ showCart = true }) {
     <header className="topbar">
       <div className="topbar-inner">
         <Link to="/" className="topbar-brand">
-          UniMeals
+          <span className="topbar-brandAccent">Uni</span>Meals
         </Link>
 
         <nav className="topbar-nav" aria-label="Main">
@@ -109,7 +109,7 @@ export default function TopBar({ showCart = true }) {
           ) : null}
 
           {isLoggedIn ? (
-            <button type="button" className="topbar-auth-btn" onClick={handleLogout}>
+            <button type="button" className="topbar-auth-btn topbar-auth-btn--logout" onClick={handleLogout}>
               Logout
             </button>
           ) : (
